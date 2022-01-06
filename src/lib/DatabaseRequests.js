@@ -56,3 +56,11 @@ export const getPlayerStats = (id, callback) => {
     })
     .catch((err) => console.error(err));
 };
+
+export const getLiveScore = (callback) => {
+  axios.get('/api/livescore')
+    .then((livescore) => {
+      callback(livescore.data);
+    })
+    .catch((err) => console.error(err));
+};
