@@ -18,7 +18,7 @@ export const getFootballCountries = (callback) => {
 };
 
 export const getFootballLeaguess = (country, callback) => {
-  axios.get(`/football/leagues/type/league/${country}/2020`)
+  axios.get(`/football/leagues/type/league/${country}/2021`)
     .then((countries) => {
       callback(countries.data);
     })
@@ -42,7 +42,7 @@ export const getTeamFixtures = (id, callback) => {
 };
 
 export const getTeamPlayers = (id, callback) => {
-  axios.get(`/football/players/squad/${id}/2020-2021`)
+  axios.get(`/football/players/squad/${id}/2021-2022`)
     .then((players) => {
       callback(players.data);
     })
@@ -50,7 +50,7 @@ export const getTeamPlayers = (id, callback) => {
 };
 
 export const getPlayerStats = (id, callback) => {
-  axios.get(`/football/players/player/${id}/2020-2021`)
+  axios.get(`/football/players/player/${id}/2021-2022`)
     .then((player) => {
       callback(player.data);
     })

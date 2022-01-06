@@ -67,7 +67,7 @@ const getAndUpdateLeagues = (req, res) => {
   console.log('API CALL: UPDATE COUNTRY LEAGUES');
   axios({
     method: 'GET',
-    url: `https://${hostKey}/v2/leagues/type/league/${countryName}/2020`,
+    url: `https://${hostKey}/v2/leagues/type/league/${countryName}/2021`,
     headers: {
       'content-type': 'application/octet-stream',
       'x-rapidapi-host': hostKey,
@@ -154,7 +154,7 @@ const getAndUpdateTeamPlayers = (req, res) => {
   console.log('API CALL: GET TEAM PLAYERS');
   axios({
     method: 'GET',
-    url: `https://${hostKey}/v2/players/squad/${teamId}/2020-2021`,
+    url: `https://${hostKey}/v2/players/squad/${teamId}/2021-2022`,
     headers: {
       'content-type': 'application/octet-stream',
       'x-rapidapi-host': hostKey,
@@ -163,6 +163,7 @@ const getAndUpdateTeamPlayers = (req, res) => {
     },
   })
     .then((response) => {
+      console.log(teamId);
       const { players } = response.data.api;
       const updateDatabase = footy.updateTeamPlayers(teamId, players);
       Promise.resolve(updateDatabase)
@@ -183,7 +184,7 @@ const getAndUpdatePlayerStats = (req, res) => {
   console.log('API CALL: GET PLAYER STATS');
   axios({
     method: 'GET',
-    url: `https://${hostKey}/v2/players/player/${playerID}/2020-2021`,
+    url: `https://${hostKey}/v2/players/player/${playerID}/2021-2022`,
     headers: {
       'content-type': 'application/octet-stream',
       'x-rapidapi-host': hostKey,

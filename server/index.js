@@ -15,12 +15,12 @@ app.use('/football', express.static(path.resolve('public')));
 
 // External API-FOOTBALL calls
 app.get('/api/countries', fb.getAndUpdateCountries);
-app.get('/api/leagues/type/league/:country/2020', fb.getAndUpdateLeagues);
+app.get('/api/leagues/type/league/:country/2021', fb.getAndUpdateLeagues);
 app.get('/api/tabel/standings/:league_id', fb.getAndUpdateStandings);
 app.get('/api/teams/team/:team_id', fb.getAndUpdateTeamInfo);
 app.get('/api/teams/team/fixtures/:team_id', fb.getAndUpdateTeamFixtures);
-app.get('api/players/squad/:team_id/2020-2021', fb.getAndUpdateTeamPlayers);
-app.get('/api/players/player/:player_id/2020-2021', fb.getAndUpdatePlayerStats);
+app.get('api/players/squad/:team_id/2021-2022', fb.getAndUpdateTeamPlayers);
+app.get('/api/players/player/:player_id/2021-2022', fb.getAndUpdatePlayerStats);
 
 // Database requests
 app.get('/football/countries', fb.getCountries);
