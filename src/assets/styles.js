@@ -1,5 +1,5 @@
 /* eslint-disable import/prefer-default-export */
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle } from "styled-components";
 import styled from "styled-components";
 
 export const GlobalStyle = createGlobalStyle`
@@ -28,7 +28,6 @@ export const GlobalStyle = createGlobalStyle`
   }
 `;
 
-
 export const MainBody = styled.div`
   aligh-items: center;
   display: flex;
@@ -41,6 +40,7 @@ export const MainBody = styled.div`
   min-width: 250px;
   padding-top: 5px;
   width: 80vw;
+  border: 1px solid #ccc !important;
 `;
 
 export const ClubInformationSection = styled.div`
@@ -54,14 +54,20 @@ export const ClubInformationSection = styled.div`
   max-width: 1600px;
   min-width: 250px;
   width: 80vw;
+  border: 1px solid #ccc !important;
 `;
 
-export const TeamPlayersContainer = styled.div`
+export const MatchContainer = styled.div`
   max-height: 300px;
   width: 100%;
+  
 `;
 
-export const TeamPlayersTabelContainer = styled.div`
+export const Space = styled.div`
+  padding-bottom: 1em;
+`;
+
+export const MatchTableContainer = styled.div`
   background-color: #fff;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
@@ -81,79 +87,112 @@ export const TeamPlayersTabelContainer = styled.div`
     border: 1px solid #f1f3f4;
     border-radius: 4px;
   }
+  border: 1px solid #ccc !important;
 `;
 
-export const TeamPlayersTabelHeader = styled.div`
-  background-color: #fff;
-  border-bottom: 1px solid #b2b2b2;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  display: grid;
-  font-weight: 700;
-  grid-template-areas: "name position nationality age height weight";
-  grid-template-columns: 3fr 2fr 2fr 1fr 1fr 1fr;
-  min-width: 100%;
-  padding: 5px;
-  padding-top: 10px;
-`;
-
-export const TeamPlayersTabelRow = styled.div`
+export const MatchRow = styled.div`
   background-color: #fff;
   border-top: 1px solid #f1f3f4;
   cursor: pointer;
-  display: grid;
+  display: flex;
+  align-items: center;
+  font-size: 11px;
+  position: relative;
   font-weight: 400;
-  grid-template-areas: "name position nationality age height weight";
-  grid-template-columns: 3fr 2fr 2fr 1fr 1fr 1fr;
   padding: 5px;
 
   &:hover {
     background-color: #00d4b1;
   }
+  overflow-y: hidden;
 `;
 
-export const PlayerName = styled.div`
-  display: inline-block;
-  grid-area: name;
+export const Box = styled.div`
+  flex-direction: column;
+  text-align: center;
+  flex: 1 1;
+`;
+
+export const TeamName = styled.div`
+  color: #000000;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  height: 38px;
+  flex: 1 1;
+  max-width: 120px;
+`;
+
+export const TeamFlag = styled.img`
+  inset: auto;
+  box-sizing: border-box;
+  padding: 0px;
+  border: medium none;
+  margin: auto;
+  display: flex;
+  width: 15%;
+  height: 15%;
+`;
+
+export const ScoreAndTime = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+export const Score = styled.div`
+  color: #000000;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 18px;
+  min-height: 18px;
+  min-width: 56px;
+  text-align: center;
+`;
+
+export const Time = styled.div`
+  padding-top: 2px;
   height: 20px;
-  padding-left: 10px;
+  text-transform: capitalize;
 `;
 
-export const PlayerPosition = styled.div`
-  grid-area: position;
-  text-align: center;
+export const LeagueBox = styled.div`
+  background-color: #fff;
+  display: flex;
+  font-size: 14px;
+  padding: 10px 15px;
+  min-width: 0;
+  border: 1px solid #ccc !important;
 `;
 
-export const PlayerNationality = styled.div`
-  grid-area: nationality;
-  text-align: center;
+export const LeagueHeader = styled.div`
+  flex: 1 1;
+  width: auto;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
 
-export const PlayerAge = styled.div`
-  grid-area: age;
-  text-align: center;
+export const LeagueName = styled.div`
+  font-weight: 700;
+  margin-bottom: 2px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
 
-export const PlayerHeight = styled.div`
-  grid-area: height;
-  text-align: center;
-`;
-
-export const PlayerWeight = styled.div`
-  grid-area: weight;
-  text-align: center;
-`;
-
-export const PlayerFirstName = styled.div`
-  display: inline-block;
-  margin: auto;
-  max-height: 100%;
-`;
-
-export const PlayerLastName = styled.div`
+export const CountryName = styled.div`
   display: inline-block;
   margin: auto;
   max-height: 100%;
   padding-left: 10px;
 `;
 
+export const CountryFlag = styled.img`
+  border-radius: 2px;
+  width: 2%;
+  height: 2%;
+  padding-right: 10px;
+`;

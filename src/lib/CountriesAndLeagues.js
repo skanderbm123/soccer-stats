@@ -23,7 +23,8 @@ export const assignLiveScore = (liveScores) => {
       time: livescore.fixture.status.elapsed,
       league_id: livescore.league.id,
       league_name: livescore.league.name,
-      league_flag: livescore.league.flag,
+      country_flag: livescore.league.flag,
+      country: livescore.league.country,
       teamH_name: livescore.teams.home.name,
       teamH_logo: livescore.teams.home.logo,
       teamH_winner: livescore.teams.home.winner,
@@ -34,5 +35,7 @@ export const assignLiveScore = (liveScores) => {
       goalA: livescore.goals.away,
      });
   });
+
+  parsedLiveScore.sort((a, b) => (a.league_name >= b.league_name) ? 1 : -1)
   return parsedLiveScore;
 };

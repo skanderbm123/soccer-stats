@@ -10,8 +10,7 @@ import ClubInfomation from "./ClubInfo";
 import TeamFixtures from "./TeamFixtures";
 import TeamPlayers from "./TeamPlayers";
 import PlayerHighlightedStats from "./PlayerHighlightedStats";
-import Welcome from "./Welcome";
-
+import LiveScore from "./LiveScore";
 import {
   getFootballStandings,
   getFootballCountries,
@@ -29,22 +28,13 @@ import {
   assignLiveScore,
 } from "../lib/CountriesAndLeagues";
 
-import { GlobalStyle , 
-  MainBody, 
+import {
+  GlobalStyle,
+  MainBody,
   ClubInformationSection,
-  TeamPlayersContainer,
-  TeamPlayersTabelContainer,
-  TeamPlayersTabelHeader,
-  TeamPlayersTabelRow,
-  PlayerName,
-  PlayerPosition,
-  PlayerHeight,
-  PlayerNationality,
-  PlayerAge,
-  PlayerWeight,
-  PlayerFirstName,
-  PlayerLastName,
- } from "../assets/styles";
+} from "../assets/styles";
+import { any } from "prop-types";
+import Fixture from "./Fixture";
 
 class SoccerStats extends Component {
   constructor() {
@@ -60,6 +50,7 @@ class SoccerStats extends Component {
       teamHighlightFixtures: [],
       livescores: [],
       tabIndex: 0,
+      fixture: any,
     };
     this.addClubToList = this.addClubToList.bind(this);
     this.removeClubFromList = this.removeClubFromList.bind(this);
@@ -69,6 +60,7 @@ class SoccerStats extends Component {
     this.updateFootballStandings = this.updateFootballStandings.bind(this);
     this.updateTabIndex = this.updateTabIndex.bind(this);
     this.getLiveScore = this.getLiveScore.bind(this);
+    this.setFixture = this.setFixture.bind(this);
   }
 
   componentDidMount() {
@@ -85,10 +77,10 @@ class SoccerStats extends Component {
       const countries = assignCountryOptions(availableCountries);
       this.setState({ countries });
     });
-    
+
     setInterval(() => {
-      this.getLiveScore()  
-     }, 300000)
+      this.getLiveScore();
+    }, 300000);
   }
 
   addClubToList(id) {
@@ -143,16 +135,15 @@ class SoccerStats extends Component {
     this.setState({ tabIndex: index });
   }
 
-  getLiveScore(){
+  getLiveScore() {
     getLiveScore((presentLiveScore) => {
       const livescores = assignLiveScore(presentLiveScore);
       this.setState({ livescores: livescores });
     });
   }
 
-  test(fixture){
-    console.log(fixture);
-    this.updateTabIndex(2);
+  setFixture(fixture) {
+    this.setState({ fixture: fixture });
   }
 
   render() {
@@ -167,6 +158,7 @@ class SoccerStats extends Component {
       teamHighlightFixtures,
       livescores,
       tabIndex,
+      fixture,
     } = this.state;
     return (
       <MainBody>
@@ -182,38 +174,15 @@ class SoccerStats extends Component {
           </TabList>
 
           <TabPanel>
-            <TeamPlayersContainer>
-              <TeamPlayersTabelHeader>
-                <PlayerName>Home</PlayerName>
-                <PlayerPosition>ScoreHome</PlayerPosition>
-                <PlayerNationality>ScoreAway</PlayerNationality>
-                <PlayerAge>Away</PlayerAge>
-                <PlayerHeight>Time</PlayerHeight>
-                <PlayerWeight>League</PlayerWeight>
-              </TeamPlayersTabelHeader>
-              <TeamPlayersTabelContainer>
-                {livescores.map((livescore) => (
-                  <TeamPlayersTabelRow
-                    key={livescore.fixture}
-                    onClick={() => this.test(livescore.fixture)}
-                  >
-                    <PlayerName>
-                      <PlayerFirstName>{`${livescore.teamH_name}.`}</PlayerFirstName>
-                      <PlayerLastName>{livescore.teamA_name}</PlayerLastName>
-                    </PlayerName>
-                    <PlayerPosition>{livescore.goalH}</PlayerPosition>
-                    <PlayerNationality>{livescore.goalA}</PlayerNationality>
-                    <PlayerAge>{livescore.teamH_winner}</PlayerAge>
-                    <PlayerHeight>{livescore.time}</PlayerHeight>
-                    <PlayerWeight>{livescore.league_name}</PlayerWeight>
-                  </TeamPlayersTabelRow>
-                ))}
-              </TeamPlayersTabelContainer>
-            </TeamPlayersContainer>
+            <LiveScore
+              livescores={livescores}
+              setTabIndex={this.updateTabIndex}
+              setFixture={this.setFixture}
+            />
           </TabPanel>
 
           <TabPanel>
-          <Welcome name="Sara" />
+            <Fixture fixture={fixture}/>
           </TabPanel>
 
           <TabPanel>
