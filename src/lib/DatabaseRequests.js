@@ -58,9 +58,17 @@ export const getPlayerStats = (id, callback) => {
 };
 
 export const getLiveScore = (callback) => {
-  axios.get('/api/livescore')
+  axios.get(`/api/livescore`)
     .then((livescore) => {
       callback(livescore.data);
+    })
+    .catch((err) => console.error(err));
+};
+
+export const getFixtureById = (id, callback) => {
+  axios.get(`/api/fixture/${id}`)
+    .then((fixture) => {
+      callback(fixture.data);
     })
     .catch((err) => console.error(err));
 };

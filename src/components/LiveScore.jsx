@@ -24,13 +24,12 @@ class LiveScore extends React.Component {
     this.state = {
       presentLeague: any,
     };
-    this.setFixture = this.setFixture.bind(this);
-    this.createNewTableForDifferentLeague =
-      this.createNewTableForDifferentLeague.bind(this);
+    this.setFixtureId = this.setFixtureId.bind(this);
+    this.createNewTableForDifferentLeague.bind(this);
   }
 
-  setFixture(fixture) {
-    this.props.setFixture(fixture);
+  setFixtureId(fixtureId) {
+    this.props.setFixtureId(fixtureId);
     this.props.setTabIndex(1);
   }
 
@@ -49,11 +48,11 @@ class LiveScore extends React.Component {
         this.presentLeague,
         livescore.league_name
       ) ? (
-        <MatchContainer>
+        <MatchContainer> 
           <MatchTableContainer>
             <MatchRow
               key={livescore.fixture}
-              onClick={() => this.setFixture(livescore.fixture)}
+              onClick={() => this.setFixtureId(livescore.fixture)}
             >
               <Box>
                 <TeamFlag src={livescore.teamH_logo} />
@@ -66,7 +65,7 @@ class LiveScore extends React.Component {
                 <Time>{livescore.time}"</Time>
               </ScoreAndTime>
               <Box>
-                <TeamFlag src={livescore.teamH_logo} />
+                <TeamFlag src={livescore.teamA_logo} />
                 <TeamName>{livescore.teamA_name}</TeamName>
               </Box>
             </MatchRow>
@@ -77,7 +76,6 @@ class LiveScore extends React.Component {
           <Space />
           <LeagueBox>
             <LeagueHeader>
-              
               <LeagueName><CountryFlag src={livescore.country_flag}/>{livescore.league_name}</LeagueName>
               <CountryName>{livescore.country}</CountryName>
             </LeagueHeader>
@@ -85,7 +83,7 @@ class LiveScore extends React.Component {
           <MatchTableContainer>
             <MatchRow
               key={livescore.fixture}
-              onClick={() => this.setFixture(livescore.fixture)}
+              onClick={() => this.setFixtureId(livescore.fixture)}
             >
               <Box>
                 <TeamFlag src={livescore.teamH_logo} />
@@ -98,7 +96,7 @@ class LiveScore extends React.Component {
                 <Time>{livescore.time}"</Time>
               </ScoreAndTime>
               <Box>
-                <TeamFlag src={livescore.teamH_logo} />
+                <TeamFlag src={livescore.teamA_logo} />
                 <TeamName>{livescore.teamA_name}</TeamName>
               </Box>
             </MatchRow>

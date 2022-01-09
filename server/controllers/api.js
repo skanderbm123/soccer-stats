@@ -227,6 +227,30 @@ const getLiveScore = (req, res) => {
     });
 };
 
+const getFixtureById = (req, res) => {
+  var id = req.params.fixture_id;
+  if(id == undefined){
+    id = req.query.id;
+  }
+  console.log('API CALL: GET FIXTURE BY ID');
+  axios({
+    method: 'GET',
+    url: `https://${hostKey}/v3/fixtures`,
+    params: {id: id},
+    headers: {
+      'content-type': 'application/octet-stream',
+      'x-rapidapi-host': hostKey,
+      'x-rapidapi-key': apiKey,
+      useQueryString: true,
+    },
+  })
+    .then((response) => res.status(200).send(response.data.response))
+    .catch((error) => {
+      console.log(error);
+      res.status(500).send('Unable to retrieve fixture by id.');
+    });
+};
+
 const getCountries = (req, res) => {
   const countries = footy.getAvailableCountries(1);
   Promise.resolve(countries)
@@ -323,4 +347,5 @@ module.exports = {
   getPlayers,
   getPlayerStats,
   getLiveScore,
+  getFixtureById,
 };

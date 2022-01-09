@@ -22,6 +22,7 @@ app.get('/api/teams/team/fixtures/:team_id', fb.getAndUpdateTeamFixtures);
 app.get('api/players/squad/:team_id/2021-2022', fb.getAndUpdateTeamPlayers);
 app.get('/api/players/player/:player_id/2021-2022', fb.getAndUpdatePlayerStats);
 app.get('/api/livescore', fb.getLiveScore);
+app.get('/api/fixture/:fixture_id', fb.getFixtureById);
 
 // Database requests
 app.get('/football/countries', fb.getCountries);

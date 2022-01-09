@@ -20,6 +20,7 @@ import {
   getTeamPlayers,
   getPlayerStats,
   getLiveScore,
+  getFixtureById,
 } from "../lib/DatabaseRequests";
 
 import {
@@ -33,7 +34,6 @@ import {
   MainBody,
   ClubInformationSection,
 } from "../assets/styles";
-import { any } from "prop-types";
 import Fixture from "./Fixture";
 
 class SoccerStats extends Component {
@@ -50,7 +50,8 @@ class SoccerStats extends Component {
       teamHighlightFixtures: [],
       livescores: [],
       tabIndex: 0,
-      fixture: any,
+      fixtureId: 710593,
+      fixture: [],
     };
     this.addClubToList = this.addClubToList.bind(this);
     this.removeClubFromList = this.removeClubFromList.bind(this);
@@ -60,7 +61,8 @@ class SoccerStats extends Component {
     this.updateFootballStandings = this.updateFootballStandings.bind(this);
     this.updateTabIndex = this.updateTabIndex.bind(this);
     this.getLiveScore = this.getLiveScore.bind(this);
-    this.setFixture = this.setFixture.bind(this);
+    this.getFixtureById = this.getFixtureById.bind(this);
+    this.setFixtureId = this.setFixtureId.bind(this);
   }
 
   componentDidMount() {
@@ -81,6 +83,7 @@ class SoccerStats extends Component {
     setInterval(() => {
       this.getLiveScore();
     }, 300000);
+     this.getFixtureById(this.state.fixtureId);
   }
 
   addClubToList(id) {
@@ -142,8 +145,13 @@ class SoccerStats extends Component {
     });
   }
 
-  setFixture(fixture) {
-    this.setState({ fixture: fixture });
+  getFixtureById(id) {
+    getFixtureById(id, (fixture) => this.setState({ fixture }));
+  }
+
+  setFixtureId(fixtureId) {
+    this.setState({ fixtureId: fixtureId });
+    this.getFixtureById(fixtureId);
   }
 
   render() {
@@ -158,6 +166,7 @@ class SoccerStats extends Component {
       teamHighlightFixtures,
       livescores,
       tabIndex,
+      fixtureId,
       fixture,
     } = this.state;
     return (
@@ -177,12 +186,12 @@ class SoccerStats extends Component {
             <LiveScore
               livescores={livescores}
               setTabIndex={this.updateTabIndex}
-              setFixture={this.setFixture}
+              setFixtureId={this.setFixtureId}
             />
           </TabPanel>
 
           <TabPanel>
-            <Fixture fixture={fixture}/>
+            <Fixture fixture={fixture} fixtureId={fixtureId} />
           </TabPanel>
 
           <TabPanel>
