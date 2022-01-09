@@ -50,7 +50,7 @@ class SoccerStats extends Component {
       teamHighlightFixtures: [],
       livescores: [],
       tabIndex: 0,
-      fixtureId: 710593,
+      fixtureId: 0,
       fixture: [],
     };
     this.addClubToList = this.addClubToList.bind(this);
@@ -83,7 +83,7 @@ class SoccerStats extends Component {
     setInterval(() => {
       this.getLiveScore();
     }, 300000);
-     this.getFixtureById(this.state.fixtureId);
+    this.getFixtureById(this.state.fixtureId);
   }
 
   addClubToList(id) {
