@@ -8,241 +8,292 @@ class Fixture extends React.Component {
     this.state = {
       color: "588f58",
       pattern: "lines",
-      showHomeTeam: false,
-      showAwayTeam: false,
-
-      homeTeamColor: "f08080",
-      homeTeamNumberColor: "ffffff",
-      homeGoalkeeperColor: "d6cb65",
-      homeGoalkeeperNumberColor: "333333",
-      homeTeamClickable: true,
-
-      awayTeamColor: "add8e6",
-      awayTeamNumberColor: "333333",
-      awayGoalkeeperColor: "4f6c75",
-      awayGoalkeeperNumberColor: "ffffff",
-      awayTeamClickable: true,
+      homeSquad: [],
+      awaySquad: [],
     };
-    this.test = this.test.bind(this);
+
+    this.buildHomeTeam = this.buildHomeTeam.bind(this);
+    this.setHomeLineups = this.setHomeLineups.bind(this);
+
+    this.buildAwayTeam = this.buildAwayTeam.bind(this);
+    this.setAwayLineups = this.setAwayLineups.bind(this);
   }
 
-  test(){
-    console.log(this.props.fixture);
+  componentDidMount() {
+    if (this.props.fixture.length > 0) {
+      console.log(this.props.fixture[0].fixture.id);
+      if (this.props.fixture[0].lineups.length > 0) {
+        console.log('test1');
+        this.homeSquad = this.buildHomeTeam(this.props.fixture[0].lineups[0]);
+        this.awaySquad = this.buildAwayTeam(this.props.fixture[0].lineups[1]);
+        console.log( this.homeSquad);
+        console.log( this.awaySquad);
+        this.forceUpdate();
+      } else {
+        console.log('test2');
+        this.forceUpdate();
+      }
+    }
   }
-  
 
-  buildHomeTeam() {
-    const {
-      homeTeamColor,
-      homeTeamNumberColor,
-      homeGoalkeeperColor,
-      homeGoalkeeperNumberColor,
-      homeTeamClickable,
-    } = this.state;
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.fixture.length > 0) {
+      if (prevProps.fixture[0] !== this.props.fixture[0]) {
+        if (this.props.fixture[0].lineups.length > 0) {
+          console.log('test3');
+          this.homeSquad = this.buildHomeTeam(this.props.fixture[0].lineups[0]);
+          this.awaySquad = this.buildAwayTeam(this.props.fixture[0].lineups[1]);
+          this.forceUpdate();
+        } else {
+          console.log('test4');
+          this.homeSquad = undefined;
+          this.awaySquad = undefined;
+          this.forceUpdate();
+        }
+      }
+    }
+  }
 
-    return {
-      squad: {
-        gk: {
-          number: 1,
-          name: "test",
-          color: `#${homeGoalkeeperColor}`,
-          numberColor: `#${homeGoalkeeperNumberColor}`,
-          onClick: homeTeamClickable
-            ? () => this.test()
-            : undefined,
-        },
-        df: [
-          {
-            number: 2,
-            onClick: homeTeamClickable
-              ? () => alert(`Home team - Player ${2}`)
-              : undefined,
-          },
-          {
-            number: 4,
-            onClick: homeTeamClickable
-              ? () => alert(`Home team - Player ${4}`)
-              : undefined,
-          },
-          {
-            number: 5,
-            onClick: homeTeamClickable
-              ? () => alert(`Home team - Player ${5}`)
-              : undefined,
-          },
-          {
-            number: 3,
-            onClick: homeTeamClickable
-              ? () => alert(`Home team - Player ${3}`)
-              : undefined,
-          },
-        ],
-        cm: [
-          {
-            number: 6,
-            onClick: homeTeamClickable
-              ? () => alert(`Home team - Player ${6}`)
-              : undefined,
-          },
-          {
-            number: 8,
-            onClick: homeTeamClickable
-              ? () => alert(`Home team - Player ${8}`)
-              : undefined,
-          },
-          {
-            number: 11,
-            onClick: homeTeamClickable
-              ? () => alert(`Home team - Player ${11}`)
-              : undefined,
-          },
-          {
-            number: 10,
-            onClick: homeTeamClickable
-              ? () => alert(`Home team - Player ${10}`)
-              : undefined,
-          },
-        ],
-        fw: [
-          {
-            number: 9,
-            onClick: homeTeamClickable
-              ? () => alert(`Home team - Player ${9}`)
-              : undefined,
-          },
-          {
-            number: 13,
-            onClick: homeTeamClickable
-              ? () => alert(`Home team - Player ${13}`)
-              : undefined,
-          },
-        ],
-      },
-      style: {
+  buildHomeTeam(lineups) {
+    console.log("Building Home Team");
+    return this.setHomeLineups(lineups);
+  }
+
+  setHomeLineups(lineups) {
+    const formation = lineups.formation;
+    const positions = formation.split("-");
+
+    const homeTeamColor = lineups.team.colors.player.primary;
+    const homeTeamNumberColor = lineups.team.colors.player.number;
+    const homeGoalkeeperColor = lineups.team.colors.goalkeeper.primary;
+    const homeGoalkeeperNumberColor = lineups.team.colors.goalkeeper.number;
+
+
+    var gk = {
+      number: lineups.startXI[0].player.number,
+      name: lineups.startXI[0].player.name,
+      color: `#${homeGoalkeeperColor}`,
+      numberColor: `#${homeGoalkeeperNumberColor}`,
+      id: lineups.startXI[0].player.id,
+      onClick: () => alert(`Home team - Player ${homeGoalkeeperColor}`),
+    };
+    var count = 1;
+    var df = [];
+    var cm = [];
+    var cam = [];
+    var fw = [];
+
+    // for defenders
+    for (var i = positions[0]; 0 < i; i--) {
+      df.push({
+        number: lineups.startXI[i].player.number,
+        name: lineups.startXI[i].player.name,
         color: `#${homeTeamColor}`,
         numberColor: `#${homeTeamNumberColor}`,
-      },
-    };
-  }
-  buildAwayTeam() {
-    const {
-      awayTeamColor,
-      awayTeamNumberColor,
-      awayGoalkeeperColor,
-      awayGoalkeeperNumberColor,
-      awayTeamClickable,
-    } = this.state;
+        id: lineups.startXI[i].player.id,
+        onClick: () => alert(`Home team - Player ${homeGoalkeeperNumberColor}`),
+      });
+      count++;
+    }
 
-    return {
-      squad: {
-        gk: {
-          number: 1,
-          color: `#${awayGoalkeeperColor}`,
-          numberColor: `#${awayGoalkeeperNumberColor}`,
-          onClick: awayTeamClickable
-            ? () => alert(`Away team - Player ${1}`)
-            : undefined,
+    // for midfields
+    for (var i = positions[1]; 0 < i; i--) {
+      cm.push({
+        number: lineups.startXI[count].player.number,
+        name: lineups.startXI[count].player.name,
+        color: `#${homeTeamColor}`,
+        numberColor: `#${homeTeamNumberColor}`,
+        id: lineups.startXI[count].player.id,
+        onClick: () => alert(`Home team - Player ${homeGoalkeeperNumberColor}`),
+      });
+      count++;
+    }
+
+    if (positions[3] == undefined) {
+      // for forward
+      for (var i = positions[2]; 0 < i; i--) {
+        fw.push({
+          number: lineups.startXI[count].player.number,
+          name: lineups.startXI[count].player.name,
+          color: `#${homeTeamColor}`,
+          numberColor: `#${homeTeamNumberColor}`,
+          id: lineups.startXI[count].player.id,
+          onClick: () =>
+            alert(`Home team - Player ${homeGoalkeeperNumberColor}`),
+        });
+        count++;
+      }
+      const squad = {
+        squad: { gk: gk, df: df, cm: cm, fw: fw },
+        style: {
+          color: `#${homeTeamColor}`,
+          numberColor: `#${homeTeamNumberColor}`,
         },
-        df: [
-          {
-            number: 2,
-            onClick: awayTeamClickable
-              ? () => alert(`Away team - Player ${2}`)
-              : undefined,
-          },
-          {
-            number: 4,
-            onClick: awayTeamClickable
-              ? () => alert(`Away team - Player ${4}`)
-              : undefined,
-          },
-          {
-            number: 5,
-            onClick: awayTeamClickable
-              ? () => alert(`Away team - Player ${5}`)
-              : undefined,
-          },
-          {
-            number: 3,
-            onClick: awayTeamClickable
-              ? () => alert(`Away team - Player ${3}`)
-              : undefined,
-          },
-        ],
-        cam: [
-          {
-            number: 7,
-            onClick: awayTeamClickable
-              ? () => alert(`Away team - Player ${7}`)
-              : undefined,
-          },
-          {
-            number: 8,
-            onClick: awayTeamClickable
-              ? () => alert(`Away team - Player ${8}`)
-              : undefined,
-          },
-          {
-            number: 6,
-            onClick: awayTeamClickable
-              ? () => alert(`Away team - Player ${6}`)
-              : undefined,
-          },
-          {
-            number: 10,
-            onClick: awayTeamClickable
-              ? () => alert(`Away team - Player ${10}`)
-              : undefined,
-          },
-        ],
-        fw: [
-          {
-            number: 9,
-            onClick: awayTeamClickable
-              ? () => alert(`Away team - Player ${9}`)
-              : undefined,
-          },
-          {
-            number: 11,
-            onClick: awayTeamClickable
-              ? () => alert(`Away team - Player ${11}`)
-              : undefined,
-          },
-        ],
-      },
-      style: {
+      };
+      return squad;
+    } else {
+      // for central attack midfielders
+      for (var i = positions[2]; 0 < i; i--) {
+        cam.push({
+          number: lineups.startXI[count].player.number,
+          name: lineups.startXI[count].player.name,
+          color: `#${homeTeamColor}`,
+          numberColor: `#${homeTeamNumberColor}`,
+          id: lineups.startXI[count].player.id,
+          onClick: () =>
+            alert(`Home team - Player ${homeGoalkeeperNumberColor}`),
+        });
+        count++;
+      }
+      // for forward
+      for (var i = positions[3]; 0 < i; i--) {
+        fw.push({
+          number: lineups.startXI[count].player.number,
+          name: lineups.startXI[count].player.name,
+          color: `#${homeTeamColor}`,
+          numberColor: `#${homeTeamNumberColor}`,
+          id: lineups.startXI[count].player.id,
+          onClick: () =>
+            alert(`Home team - Player ${homeGoalkeeperNumberColor}`),
+        });
+        count++;
+      }
+      const squad = {
+        squad: { gk: gk, df: df, cm: cm, cam: cam, fw: fw },
+        style: {
+          color: `#${homeTeamColor}`,
+          numberColor: `#${homeTeamNumberColor}`,
+        },
+      };
+      return squad;
+    }
+  }
+
+  buildAwayTeam(lineups) {
+    console.log("Building Away Team");
+    return this.setAwayLineups(lineups);
+  }
+
+  setAwayLineups(lineups) {
+
+    const formation = lineups.formation;
+    const positions = formation.split("-");
+
+    
+    const awayTeamColor = lineups.team.colors.player.primary;
+    const awayTeamNumberColor = lineups.team.colors.player.number;
+    const awayGoalkeeperColor = lineups.team.colors.goalkeeper.primary;
+    const awayGoalkeeperNumberColor = lineups.team.colors.goalkeeper.number;
+
+
+    var gk = {
+      number: lineups.startXI[0].player.number,
+      name: lineups.startXI[0].player.name,
+      color: `#${awayGoalkeeperColor}`,
+      numberColor: `#${awayGoalkeeperNumberColor}`,
+      id: lineups.startXI[0].player.id,
+      onClick: () => alert(`Home team - Player ${awayGoalkeeperColor}`),
+    };
+
+    var count = 1;
+    var df = [];
+    var cm = [];
+    var cam = [];
+    var fw = [];
+
+    // for defenders
+    for (var i = positions[0]; 0 < i; i--) {
+      df.push({
+        number: lineups.startXI[i].player.number,
+        name: lineups.startXI[i].player.name,
         color: `#${awayTeamColor}`,
         numberColor: `#${awayTeamNumberColor}`,
-      },
-    };
+        id: lineups.startXI[i].player.id,
+        onClick: () => alert(`Home team - Player ${awayTeamNumberColor}`),
+      });
+      count++;
+    }
+
+    // for midfields
+    for (var i = positions[1]; 0 < i; i--) {
+      cm.push({
+        number: lineups.startXI[count].player.number,
+        name: lineups.startXI[count].player.name,
+        color: `#${awayTeamColor}`,
+        numberColor: `#${awayTeamNumberColor}`,
+        id: lineups.startXI[count].player.id,
+        onClick: () => alert(`Home team - Player ${awayTeamNumberColor}`),
+      });
+      count++;
+    }
+
+    if (positions[3] == undefined) {
+      // for forward
+      for (var i = positions[2]; 0 < i; i--) {
+        fw.push({
+          number: lineups.startXI[count].player.number,
+          name: lineups.startXI[count].player.name,
+          color: `#${awayTeamColor}`,
+          numberColor: `#${awayTeamNumberColor}`,
+          id: lineups.startXI[count].player.id,
+          onClick: () => alert(`Home team - Player ${awayTeamNumberColor}`),
+        });
+        count++;
+      }
+      const squad = {
+        squad: { gk: gk, df: df, cm: cm, fw: fw },
+        style: {
+          color: `#${awayTeamNumberColor}`,
+          numberColor: `#${awayTeamNumberColor}`,
+        },
+      };
+      return squad;
+    } else {
+      // for central attack midfielders
+      for (var i = positions[2]; 0 < i; i--) {
+        cam.push({
+          number: lineups.startXI[count].player.number,
+          name: lineups.startXI[count].player.name,
+          color: `#${awayTeamColor}`,
+          numberColor: `#${awayTeamNumberColor}`,
+          id: lineups.startXI[count].player.id,
+          onClick: () => alert(`Home team - Player ${awayTeamNumberColor}`),
+        });
+        count++;
+      }
+      // for forward
+      for (var i = positions[3]; 0 < i; i--) {
+        fw.push({
+          number: lineups.startXI[count].player.number,
+          name: lineups.startXI[count].player.name,
+          color: `#${awayTeamColor}`,
+          numberColor: `#${awayTeamNumberColor}`,
+          id: lineups.startXI[count].player.id,
+          onClick: () => alert(`Home team - Player ${awayTeamNumberColor}`),
+        });
+        count++;
+      }
+      const squad = {
+        squad: { gk: gk, df: df, cm: cm, cam: cam, fw: fw },
+        style: {
+          color: `#${awayTeamNumberColor}`,
+          numberColor: `#${awayTeamNumberColor}`,
+        },
+      };
+      return squad;
+    }
   }
+
   render() {
-    const { color, pattern, showHomeTeam, showAwayTeam } = this.state;
-
-    const {
-      homeTeamColor,
-      homeTeamNumberColor,
-      homeGoalkeeperColor,
-      homeGoalkeeperNumberColor,
-      homeTeamClickable,
-    } = this.state;
-
-    const {
-      awayTeamColor,
-      awayTeamNumberColor,
-      awayGoalkeeperColor,
-      awayGoalkeeperNumberColor,
-      awayTeamClickable,
-    } = this.state;
-
+    const { color, pattern } = this.state;
     return (
       <div>
         <SoccerLineUp
           size="responsive"
           color={`#${color}`}
           pattern={pattern}
-          homeTeam={this.buildHomeTeam()}
-          awayTeam={this.buildAwayTeam()}
+          homeTeam={this.homeSquad}
+          awayTeam={this.awaySquad}
         />
       </div>
     );
