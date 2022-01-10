@@ -1,5 +1,7 @@
 import React, { Component } from "react";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import SoccerLineUp from "react-soccer-lineup";
+import { GlobalStyle, MainBody } from "../assets/styles";
 
 class Fixture extends React.Component {
   constructor(props) {
@@ -23,14 +25,12 @@ class Fixture extends React.Component {
     if (this.props.fixture.length > 0) {
       console.log(this.props.fixture[0].fixture.id);
       if (this.props.fixture[0].lineups.length > 0) {
-        console.log('test1');
+        console.log("test1");
         this.homeSquad = this.buildHomeTeam(this.props.fixture[0].lineups[0]);
         this.awaySquad = this.buildAwayTeam(this.props.fixture[0].lineups[1]);
-        console.log( this.homeSquad);
-        console.log( this.awaySquad);
         this.forceUpdate();
       } else {
-        console.log('test2');
+        console.log("test2");
         this.forceUpdate();
       }
     }
@@ -40,12 +40,12 @@ class Fixture extends React.Component {
     if (this.props.fixture.length > 0) {
       if (prevProps.fixture[0] !== this.props.fixture[0]) {
         if (this.props.fixture[0].lineups.length > 0) {
-          console.log('test3');
+          console.log("test3");
           this.homeSquad = this.buildHomeTeam(this.props.fixture[0].lineups[0]);
           this.awaySquad = this.buildAwayTeam(this.props.fixture[0].lineups[1]);
           this.forceUpdate();
         } else {
-          console.log('test4');
+          console.log("test4");
           this.homeSquad = undefined;
           this.awaySquad = undefined;
           this.forceUpdate();
@@ -68,13 +68,13 @@ class Fixture extends React.Component {
     const homeGoalkeeperColor = lineups.team.colors.goalkeeper.primary;
     const homeGoalkeeperNumberColor = lineups.team.colors.goalkeeper.number;
 
-
     var gk = {
       number: lineups.startXI[0].player.number,
       name: lineups.startXI[0].player.name,
       color: `#${homeGoalkeeperColor}`,
       numberColor: `#${homeGoalkeeperNumberColor}`,
       id: lineups.startXI[0].player.id,
+      nameColor: `#000000`,
       onClick: () => alert(`Home team - Player ${homeGoalkeeperColor}`),
     };
     var count = 1;
@@ -91,6 +91,7 @@ class Fixture extends React.Component {
         color: `#${homeTeamColor}`,
         numberColor: `#${homeTeamNumberColor}`,
         id: lineups.startXI[i].player.id,
+        nameColor: `#000000`,
         onClick: () => alert(`Home team - Player ${homeGoalkeeperNumberColor}`),
       });
       count++;
@@ -104,6 +105,7 @@ class Fixture extends React.Component {
         color: `#${homeTeamColor}`,
         numberColor: `#${homeTeamNumberColor}`,
         id: lineups.startXI[count].player.id,
+        nameColor: `#000000`,
         onClick: () => alert(`Home team - Player ${homeGoalkeeperNumberColor}`),
       });
       count++;
@@ -118,6 +120,7 @@ class Fixture extends React.Component {
           color: `#${homeTeamColor}`,
           numberColor: `#${homeTeamNumberColor}`,
           id: lineups.startXI[count].player.id,
+          nameColor: `#000000`,
           onClick: () =>
             alert(`Home team - Player ${homeGoalkeeperNumberColor}`),
         });
@@ -140,6 +143,7 @@ class Fixture extends React.Component {
           color: `#${homeTeamColor}`,
           numberColor: `#${homeTeamNumberColor}`,
           id: lineups.startXI[count].player.id,
+          nameColor: `#000000`,
           onClick: () =>
             alert(`Home team - Player ${homeGoalkeeperNumberColor}`),
         });
@@ -153,6 +157,7 @@ class Fixture extends React.Component {
           color: `#${homeTeamColor}`,
           numberColor: `#${homeTeamNumberColor}`,
           id: lineups.startXI[count].player.id,
+          nameColor: `#000000`,
           onClick: () =>
             alert(`Home team - Player ${homeGoalkeeperNumberColor}`),
         });
@@ -175,16 +180,13 @@ class Fixture extends React.Component {
   }
 
   setAwayLineups(lineups) {
-
     const formation = lineups.formation;
     const positions = formation.split("-");
 
-    
     const awayTeamColor = lineups.team.colors.player.primary;
     const awayTeamNumberColor = lineups.team.colors.player.number;
     const awayGoalkeeperColor = lineups.team.colors.goalkeeper.primary;
     const awayGoalkeeperNumberColor = lineups.team.colors.goalkeeper.number;
-
 
     var gk = {
       number: lineups.startXI[0].player.number,
@@ -192,6 +194,7 @@ class Fixture extends React.Component {
       color: `#${awayGoalkeeperColor}`,
       numberColor: `#${awayGoalkeeperNumberColor}`,
       id: lineups.startXI[0].player.id,
+      nameColor: `#000000`,
       onClick: () => alert(`Home team - Player ${awayGoalkeeperColor}`),
     };
 
@@ -209,6 +212,7 @@ class Fixture extends React.Component {
         color: `#${awayTeamColor}`,
         numberColor: `#${awayTeamNumberColor}`,
         id: lineups.startXI[i].player.id,
+        nameColor: `#000000`,
         onClick: () => alert(`Home team - Player ${awayTeamNumberColor}`),
       });
       count++;
@@ -222,6 +226,7 @@ class Fixture extends React.Component {
         color: `#${awayTeamColor}`,
         numberColor: `#${awayTeamNumberColor}`,
         id: lineups.startXI[count].player.id,
+        nameColor: `#000000`,
         onClick: () => alert(`Home team - Player ${awayTeamNumberColor}`),
       });
       count++;
@@ -236,6 +241,7 @@ class Fixture extends React.Component {
           color: `#${awayTeamColor}`,
           numberColor: `#${awayTeamNumberColor}`,
           id: lineups.startXI[count].player.id,
+          nameColor: `#000000`,
           onClick: () => alert(`Home team - Player ${awayTeamNumberColor}`),
         });
         count++;
@@ -257,6 +263,7 @@ class Fixture extends React.Component {
           color: `#${awayTeamColor}`,
           numberColor: `#${awayTeamNumberColor}`,
           id: lineups.startXI[count].player.id,
+          nameColor: `#000000`,
           onClick: () => alert(`Home team - Player ${awayTeamNumberColor}`),
         });
         count++;
@@ -269,6 +276,7 @@ class Fixture extends React.Component {
           color: `#${awayTeamColor}`,
           numberColor: `#${awayTeamNumberColor}`,
           id: lineups.startXI[count].player.id,
+          nameColor: `#000000`,
           onClick: () => alert(`Home team - Player ${awayTeamNumberColor}`),
         });
         count++;
@@ -287,15 +295,27 @@ class Fixture extends React.Component {
   render() {
     const { color, pattern } = this.state;
     return (
-      <div>
+      <MainBody>
         <SoccerLineUp
-          size="responsive"
+          size="normal"
           color={`#${color}`}
           pattern={pattern}
           homeTeam={this.homeSquad}
           awayTeam={this.awaySquad}
         />
-      </div>
+
+        <Tabs>
+          <TabList>
+            <Tab>Players</Tab>
+            <Tab>Events</Tab>
+            <Tab>Statistics</Tab>
+          </TabList>
+
+          <TabPanel></TabPanel>
+
+          <TabPanel></TabPanel>
+        </Tabs>
+      </MainBody>
     );
   }
 }

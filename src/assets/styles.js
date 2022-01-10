@@ -26,6 +26,11 @@ export const GlobalStyle = createGlobalStyle`
   html {
       scroll-behavior: smooth;
   }
+  .pitch.normal{
+      align-self: center;
+      height: 700px;
+      width: 1450px;
+  }
 `;
 
 export const MainBody = styled.div`
@@ -60,7 +65,6 @@ export const ClubInformationSection = styled.div`
 export const MatchContainer = styled.div`
   max-height: 300px;
   width: 100%;
-  
 `;
 
 export const Space = styled.div`

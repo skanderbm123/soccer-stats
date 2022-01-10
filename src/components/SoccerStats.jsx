@@ -50,7 +50,7 @@ class SoccerStats extends Component {
       teamHighlightFixtures: [],
       livescores: [],
       tabIndex: 0,
-      fixtureId: 0,
+      fixtureId: 710593,
       fixture: [],
     };
     this.addClubToList = this.addClubToList.bind(this);
