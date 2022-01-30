@@ -17,7 +17,7 @@ const SelectCountry = ({ countries, updateCountryLeagueList }) => (
   <SearchCountry>
     <Select
       label="Single select"
-      defaultValue={{ label: 'England', value: 'England' }}
+      defaultValue={{ label: 'France', value: 'France' }}
       options={countries}
       placeholder="Select Country"
       onChange={updateCountryLeagueList}

@@ -29,7 +29,7 @@ class LiveScore extends React.Component {
   }
 
   setFixtureId(fixtureId) {
-    this.props.setFixtureId(718243);
+    this.props.setFixtureId(710593);
     this.props.setTabIndex(1);
   }
 

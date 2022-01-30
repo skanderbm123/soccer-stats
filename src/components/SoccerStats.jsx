@@ -21,6 +21,7 @@ import {
   getPlayerStats,
   getLiveScore,
   getFixtureById,
+  getPlayerNotesByFixtureId
 } from "../lib/DatabaseRequests";
 
 import {
@@ -52,6 +53,7 @@ class SoccerStats extends Component {
       tabIndex: 0,
       fixtureId: 710593,
       fixture: [],
+      fixtureNotes: [],
     };
     this.addClubToList = this.addClubToList.bind(this);
     this.removeClubFromList = this.removeClubFromList.bind(this);
@@ -67,12 +69,12 @@ class SoccerStats extends Component {
 
   componentDidMount() {
     // leeds united placeholders
-    getFootballStandings(2790, (standings) => {
+    getFootballStandings(3506, (standings) => {
       this.setState({ standings });
-      this.updateCountryLeagueList({ value: "England" });
-      this.highlightClubInfo(63);
-      this.addClubToList(63);
-      this.highlightPlayerInfo(19130);
+      this.updateCountryLeagueList({ value: "France" });
+      //this.highlightClubInfo(63);
+     // this.addClubToList(63);
+      //this.highlightPlayerInfo(19130);
       this.getLiveScore();
     });
     getFootballCountries((availableCountries) => {
@@ -147,6 +149,7 @@ class SoccerStats extends Component {
 
   getFixtureById(id) {
     getFixtureById(id, (fixture) => this.setState({ fixture }));
+    getPlayerNotesByFixtureId(id, (fixtureNotes) => this.setState({ fixtureNotes }));
   }
 
   setFixtureId(fixtureId) {
@@ -168,6 +171,7 @@ class SoccerStats extends Component {
       tabIndex,
       fixtureId,
       fixture,
+      fixtureNotes
     } = this.state;
     return (
       <MainBody>
@@ -191,7 +195,7 @@ class SoccerStats extends Component {
           </TabPanel>
 
           <TabPanel>
-            <Fixture fixture={fixture} fixtureId={fixtureId} />
+            <Fixture fixture={fixture} fixtureId={fixtureId} fixtureNotes={fixtureNotes} />
           </TabPanel>
 
           <TabPanel>

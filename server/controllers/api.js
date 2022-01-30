@@ -331,6 +331,29 @@ const getPlayerStats = (req, res) => {
     });
 };
 
+const getPlayerNotes = (req, res) => {
+  const fixture_id = req.params.fixture_id;
+  const fixture = footy.getPlayerNotes(fixture_id);
+  Promise.resolve(fixture)
+    .then((results) => res.status(200).send(results.fixture))
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+const updatePlayerNotes = (req, res) => {
+  console.log("TO DO");
+  const fixture_id = req.params.fixture_id;
+  const players = req.params.fixture;
+  const updateDatabase = footy.updatePlayernotes(fixture_id, players);
+  Promise.resolve(updateDatabase)
+    .then(() => res.status(200).send(players))
+    .catch((error) => {
+      console.log(error);
+      res.status(500).send('Unable to update player notes.');
+    });
+};
+
 module.exports = {
   getAndUpdateCountries,
   getAndUpdateLeagues,
@@ -346,6 +369,8 @@ module.exports = {
   getFixtures,
   getPlayers,
   getPlayerStats,
+  getPlayerNotes,
   getLiveScore,
   getFixtureById,
+  updatePlayerNotes,
 };

@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import SoccerLineUp from "react-soccer-lineup";
-import { GlobalStyle, MainBody, DoubleYellowCard } from "../assets/styles";
+import { GlobalStyle, MainBody } from "../assets/styles";
 import { Timeline, TimelineEvent } from "react-event-timeline";
+import Swal from 'sweetalert2'
 
 class Fixture extends React.Component {
   constructor(props) {
@@ -25,6 +26,23 @@ class Fixture extends React.Component {
     this.setTitle = this.setTitle.bind(this);
     this.setTime = this.setTime.bind(this);
     this.setMessage = this.setMessage.bind(this);
+    this.changeLineUps = this.changeLineUps.bind(this);
+    this.getNumber = this.getNumber.bind(this);
+    this.playerNote = this.playerNote.bind(this);
+  }
+
+  playerNote(id) {
+    var home_team = this.props.fixtureNotes[0];
+    var away_team = this.props.fixtureNotes[1];
+
+    
+    Swal.fire({
+      title: 'Error!',
+      text: id,
+      icon: 'error',
+      confirmButtonText: 'Cool',
+      
+    })
   }
 
   componentDidMount() {
@@ -34,9 +52,17 @@ class Fixture extends React.Component {
         console.log("test1");
         this.homeSquad = this.buildHomeTeam(this.props.fixture[0].lineups[0]);
         this.awaySquad = this.buildAwayTeam(this.props.fixture[0].lineups[1]);
+        this.setState({
+          homeSquad: this.homeSquad,
+          awaySquad: this.awaySquad,
+        });
         this.forceUpdate();
       } else {
         console.log("test2");
+        this.setState({
+          homeSquad: this.homeSquad,
+          awaySquad: this.awaySquad,
+        });
         this.forceUpdate();
       }
     }
@@ -49,11 +75,19 @@ class Fixture extends React.Component {
           console.log("test3");
           this.homeSquad = this.buildHomeTeam(this.props.fixture[0].lineups[0]);
           this.awaySquad = this.buildAwayTeam(this.props.fixture[0].lineups[1]);
+          this.setState({
+            homeSquad: this.homeSquad,
+            awaySquad: this.awaySquad,
+          });
           this.forceUpdate();
         } else {
           console.log("test4");
           this.homeSquad = undefined;
           this.awaySquad = undefined;
+          this.setState({
+            homeSquad: this.homeSquad,
+            awaySquad: this.awaySquad,
+          });
           this.forceUpdate();
         }
       }
@@ -73,6 +107,7 @@ class Fixture extends React.Component {
     const homeTeamNumberColor = lineups.team.colors.player.number;
     const homeGoalkeeperColor = lineups.team.colors.goalkeeper.primary;
     const homeGoalkeeperNumberColor = lineups.team.colors.goalkeeper.number;
+    const g_id = lineups.startXI[0].player.id;
 
     var gk = {
       number: lineups.startXI[0].player.number,
@@ -81,7 +116,7 @@ class Fixture extends React.Component {
       numberColor: `#${homeGoalkeeperNumberColor}`,
       id: lineups.startXI[0].player.id,
       nameColor: `#000000`,
-      onClick: () => alert(`Home team - Player ${homeGoalkeeperColor}`),
+      onClick: () => this.playerNote(g_id),
     };
     var count = 1;
     var df = [];
@@ -91,6 +126,7 @@ class Fixture extends React.Component {
 
     // for defenders
     for (var i = positions[0]; 0 < i; i--) {
+      const id = lineups.startXI[i].player.id;
       df.push({
         number: lineups.startXI[i].player.number,
         name: lineups.startXI[i].player.name,
@@ -98,13 +134,14 @@ class Fixture extends React.Component {
         numberColor: `#${homeTeamNumberColor}`,
         id: lineups.startXI[i].player.id,
         nameColor: `#000000`,
-        onClick: () => alert(`Home team - Player ${homeGoalkeeperNumberColor}`),
+        onClick: () => this.playerNote(id),
       });
       count++;
     }
 
     // for midfields
     for (var i = positions[1]; 0 < i; i--) {
+      const id = lineups.startXI[count].player.id;
       cm.push({
         number: lineups.startXI[count].player.number,
         name: lineups.startXI[count].player.name,
@@ -112,7 +149,7 @@ class Fixture extends React.Component {
         numberColor: `#${homeTeamNumberColor}`,
         id: lineups.startXI[count].player.id,
         nameColor: `#000000`,
-        onClick: () => alert(`Home team - Player ${homeGoalkeeperNumberColor}`),
+        onClick: () => this.playerNote(id),
       });
       count++;
     }
@@ -120,6 +157,7 @@ class Fixture extends React.Component {
     if (positions[3] == undefined) {
       // for forward
       for (var i = positions[2]; 0 < i; i--) {
+        const id = lineups.startXI[count].player.id;
         fw.push({
           number: lineups.startXI[count].player.number,
           name: lineups.startXI[count].player.name,
@@ -128,7 +166,7 @@ class Fixture extends React.Component {
           id: lineups.startXI[count].player.id,
           nameColor: `#000000`,
           onClick: () =>
-            alert(`Home team - Player ${homeGoalkeeperNumberColor}`),
+          this.playerNote(id),
         });
         count++;
       }
@@ -143,6 +181,7 @@ class Fixture extends React.Component {
     } else {
       // for central attack midfielders
       for (var i = positions[2]; 0 < i; i--) {
+        const id = lineups.startXI[count].player.id;
         cam.push({
           number: lineups.startXI[count].player.number,
           name: lineups.startXI[count].player.name,
@@ -151,12 +190,13 @@ class Fixture extends React.Component {
           id: lineups.startXI[count].player.id,
           nameColor: `#000000`,
           onClick: () =>
-            alert(`Home team - Player ${homeGoalkeeperNumberColor}`),
+          this.playerNote(id),
         });
         count++;
       }
       // for forward
       for (var i = positions[3]; 0 < i; i--) {
+        const id = lineups.startXI[count].player.id;
         fw.push({
           number: lineups.startXI[count].player.number,
           name: lineups.startXI[count].player.name,
@@ -165,7 +205,7 @@ class Fixture extends React.Component {
           id: lineups.startXI[count].player.id,
           nameColor: `#000000`,
           onClick: () =>
-            alert(`Home team - Player ${homeGoalkeeperNumberColor}`),
+          this.playerNote(id),
         });
         count++;
       }
@@ -193,6 +233,7 @@ class Fixture extends React.Component {
     const awayTeamNumberColor = lineups.team.colors.player.number;
     const awayGoalkeeperColor = lineups.team.colors.goalkeeper.primary;
     const awayGoalkeeperNumberColor = lineups.team.colors.goalkeeper.number;
+    const g_id = lineups.startXI[0].player.id;
 
     var gk = {
       number: lineups.startXI[0].player.number,
@@ -201,7 +242,7 @@ class Fixture extends React.Component {
       numberColor: `#${awayGoalkeeperNumberColor}`,
       id: lineups.startXI[0].player.id,
       nameColor: `#000000`,
-      onClick: () => alert(`Home team - Player ${awayGoalkeeperColor}`),
+      onClick: () => this.playerNote(g_id),
     };
 
     var count = 1;
@@ -212,20 +253,23 @@ class Fixture extends React.Component {
 
     // for defenders
     for (var i = positions[0]; 0 < i; i--) {
-      df.push({
+      const id = lineups.startXI[i].player.id;
+      const player = {
         number: lineups.startXI[i].player.number,
         name: lineups.startXI[i].player.name,
         color: `#${awayTeamColor}`,
         numberColor: `#${awayTeamNumberColor}`,
         id: lineups.startXI[i].player.id,
         nameColor: `#000000`,
-        onClick: () => alert(`Home team - Player ${awayTeamNumberColor}`),
-      });
+        onClick: () => this.playerNote(id),
+      };
+      df.push(player);
       count++;
     }
 
     // for midfields
     for (var i = positions[1]; 0 < i; i--) {
+      const id = lineups.startXI[count].player.id;
       cm.push({
         number: lineups.startXI[count].player.number,
         name: lineups.startXI[count].player.name,
@@ -233,7 +277,7 @@ class Fixture extends React.Component {
         numberColor: `#${awayTeamNumberColor}`,
         id: lineups.startXI[count].player.id,
         nameColor: `#000000`,
-        onClick: () => alert(`Home team - Player ${awayTeamNumberColor}`),
+        onClick: () => this.playerNote(id),
       });
       count++;
     }
@@ -241,6 +285,7 @@ class Fixture extends React.Component {
     if (positions[3] == undefined) {
       // for forward
       for (var i = positions[2]; 0 < i; i--) {
+        const id = lineups.startXI[count].player.id;
         fw.push({
           number: lineups.startXI[count].player.number,
           name: lineups.startXI[count].player.name,
@@ -248,7 +293,7 @@ class Fixture extends React.Component {
           numberColor: `#${awayTeamNumberColor}`,
           id: lineups.startXI[count].player.id,
           nameColor: `#000000`,
-          onClick: () => alert(`Home team - Player ${awayTeamNumberColor}`),
+          onClick: () => this.playerNote(id),
         });
         count++;
       }
@@ -263,6 +308,7 @@ class Fixture extends React.Component {
     } else {
       // for central attack midfielders
       for (var i = positions[2]; 0 < i; i--) {
+        const id = lineups.startXI[count].player.id;
         cam.push({
           number: lineups.startXI[count].player.number,
           name: lineups.startXI[count].player.name,
@@ -270,12 +316,13 @@ class Fixture extends React.Component {
           numberColor: `#${awayTeamNumberColor}`,
           id: lineups.startXI[count].player.id,
           nameColor: `#000000`,
-          onClick: () => alert(`Home team - Player ${awayTeamNumberColor}`),
+          onClick: () => this.playerNote(id),
         });
         count++;
       }
       // for forward
       for (var i = positions[3]; 0 < i; i--) {
+        const id = lineups.startXI[count].player.id;
         fw.push({
           number: lineups.startXI[count].player.number,
           name: lineups.startXI[count].player.name,
@@ -283,7 +330,7 @@ class Fixture extends React.Component {
           numberColor: `#${awayTeamNumberColor}`,
           id: lineups.startXI[count].player.id,
           nameColor: `#000000`,
-          onClick: () => alert(`Home team - Player ${awayTeamNumberColor}`),
+          onClick: () => this.playerNote(id),
         });
         count++;
       }
@@ -433,7 +480,8 @@ class Fixture extends React.Component {
       return message;
     }
     if (event.type == "subst") {
-      message =  " OUT : " + event.player.name + " IN : " + event.assist.name;
+      message = "OUT : " + event.player.name + " IN : " + event.assist.name;
+      this.changeLineUps(event, this.props.fixture[0]);
       return message;
     }
     if (event.detail == "Yellow Card") {
@@ -450,6 +498,52 @@ class Fixture extends React.Component {
     }
   }
 
+  changeLineUps(event, fixture) {
+    if (event.team.id == fixture.teams.home.id) {
+      var squadSelected = this.state.homeSquad;
+    } else {
+      var squadSelected = this.state.awaySquad;
+    }
+
+    for (const [key, value] of Object.entries(squadSelected)) {
+      if (key == "squad") {
+        for (const [key, players] of Object.entries(value)) {
+          if (players.id == event.player.id) {
+            players.id = event.assist.id;
+            players.name = event.assist.name;
+            players.onClick = () => this.playerNote(event.assist.id);
+            players.number = this.getNumber(event.assist.id);
+          }
+          for (const [key, player] of Object.entries(players)) {
+            if (player.id == event.player.id) {
+              player.id = event.assist.id;
+              player.name = event.assist.name;
+              player.onClick = () => this.playerNote(event.assist.id);
+              player.number = this.getNumber(event.assist.id);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  getNumber(id) {
+    var number;
+    this.props.fixture[0].lineups[0].substitutes.forEach((player) => {
+      if (player.player.id == id) {
+        number = player.player.number;
+      }
+    });
+
+    this.props.fixture[0].lineups[1].substitutes.forEach((player) => {
+      if (player.player.id == id) {
+        number = player.player.number;
+      }
+    });
+
+    return number;
+  }
+
   setEvent(event) {
     const title = this.setTitle(event);
     const time = this.setTime(event.time);
@@ -458,11 +552,7 @@ class Fixture extends React.Component {
 
     return (
       <TimelineEvent title={title} createdAt={time} icon={icon}>
-        <img
-          src={event.team.logo}
-          width="2%"
-          height="2%"
-        />
+        <img src={event.team.logo} width="2%" height="2%" />
         {message}
       </TimelineEvent>
     );

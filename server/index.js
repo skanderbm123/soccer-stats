@@ -32,5 +32,6 @@ app.get('/football/teams/team/:team_id', fb.getTeam);
 app.get('/football/teams/team/fixtures/:team_id', fb.getFixtures);
 app.get('/football/players/squad/:team_id/2021-2022', fb.getPlayers);
 app.get('/football/players/player/:player_id/2021-2022', fb.getPlayerStats);
+app.get('/football/playerNotes/:fixture_id', fb.getPlayerNotes);
 
 app.listen(PORT, () => console.log(`listening on port: ${PORT}`));

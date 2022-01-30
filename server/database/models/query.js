@@ -6,6 +6,7 @@ const {
   countryLeagues,
   teamPlayers,
   playerStats,
+  playerNotes,
 } = require('../connection');
 
 // TODO: reduce code reuse
@@ -115,6 +116,22 @@ const getTeamPlayerStats = (id) => new Promise((resolve, reject) => {
     .catch((error) => reject(error));
 });
 
+const getPlayerNotes = (id) => new Promise((resolve, reject) => {
+  const query = { _id: id };
+  return playerNotes.findOne(query)
+    .then((results) => resolve(results))
+    .catch((error) => reject(error));
+});
+
+const updatePlayerNotes = (id, players) => new Promise((resolve, reject) => {
+  const query = { _id: id };
+  const update = { _id: id, players };
+  return playerNotes.replaceOne(query, update, { upsert: true })
+    .then((results) => resolve(results))
+    .catch((error) => reject(error));
+});
+
+
 module.exports = {
   updateCountries,
   updateCountryLeagues,
@@ -123,6 +140,7 @@ module.exports = {
   updateTeamFixtures,
   updateTeamPlayers,
   updatePlayerStats,
+  updatePlayerNotes,
   getAvailableCountries,
   getAvailableLeagues,
   getLeagueStandings,
@@ -130,4 +148,5 @@ module.exports = {
   getTeamFixtures,
   getTeamPlayers,
   getTeamPlayerStats,
+  getPlayerNotes,
 };
