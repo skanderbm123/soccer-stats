@@ -31,6 +31,7 @@ export const GlobalStyle = createGlobalStyle`
       height: 700px;
       width: 1450px;
   }
+
 `;
 
 export const MainBody = styled.div`
@@ -46,6 +47,22 @@ export const MainBody = styled.div`
   padding-top: 5px;
   width: 80vw;
   border: 1px solid #ccc !important;
+`;
+
+export const ColNote = styled.div`
+  flex: 50%;
+`;
+
+export const RowNote = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+`;
+
+export const DropDownTitle = styled.span`
+  float: left;
+  padding: 1%;
 `;
 
 export const ClubInformationSection = styled.div`

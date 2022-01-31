@@ -1,9 +1,13 @@
 import React, { Component } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import SoccerLineUp from "react-soccer-lineup";
-import { GlobalStyle, MainBody } from "../assets/styles";
+import { MainBody, RowNote, ColNote, DropDownTitle } from "../assets/styles";
 import { Timeline, TimelineEvent } from "react-event-timeline";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import Select from "react-select";
+
+const MySwal = withReactContent(Swal);
 
 class Fixture extends React.Component {
   constructor(props) {
@@ -29,20 +33,170 @@ class Fixture extends React.Component {
     this.changeLineUps = this.changeLineUps.bind(this);
     this.getNumber = this.getNumber.bind(this);
     this.playerNote = this.playerNote.bind(this);
+    this.findPlayer = this.findPlayer.bind(this);
+    this.showPlayerBoxNote = this.showPlayerBoxNote.bind(this);
   }
 
-  playerNote(id) {
-    var home_team = this.props.fixtureNotes[0];
-    var away_team = this.props.fixtureNotes[1];
+  findPlayer(id) {
+    var playerId = 0;
+    var playerName = null;
 
-    
-    Swal.fire({
-      title: 'Error!',
-      text: id,
-      icon: 'error',
-      confirmButtonText: 'Cool',
-      
-    })
+    for (const [key, value] of Object.entries(this.awaySquad)) {
+      if (key == "squad") {
+        for (const [key, players] of Object.entries(value)) {
+          if (players.id == id) {
+            playerId = players.id;
+            playerName = players.name;
+          }
+          for (const [key, player] of Object.entries(players)) {
+            if (player.id == id) {
+              playerId = player.id;
+              playerName = player.name;
+            }
+          }
+        }
+      }
+    }
+
+    for (const [key, value] of Object.entries(this.homeSquad)) {
+      if (key == "squad") {
+        for (const [key, players] of Object.entries(value)) {
+          if (players.id == id) {
+            playerId = players.id;
+            playerName = players.name;
+          }
+          for (const [key, player] of Object.entries(players)) {
+            if (player.id == id) {
+              playerId = player.id;
+              playerName = player.name;
+            }
+          }
+        }
+      }
+    }
+    return { id: playerId, name: playerName };
+  }
+
+  showPlayerBoxNote(player) {
+    const options = [
+      { value: "-5", label: "-5" },
+      { value: "-4", label: "-4" },
+      { value: "-3", label: "-3" },
+      { value: "-2", label: "-2" },
+      { value: "-1", label: "-1" },
+      { value: "0", label: "0" },
+      { value: "1", label: "1" },
+      { value: "2", label: "2" },
+      { value: "3", label: "3" },
+      { value: "4", label: "4" },
+      { value: "5", label: "5" },
+    ];
+
+    return (
+      <RowNote>
+        <ColNote>
+          <h3>Attaque</h3>
+          <DropDownTitle>Passe courte</DropDownTitle>
+          <Select title="test" placeholder="lol1" options={options} />
+          <DropDownTitle>Passe longue</DropDownTitle>{" "}
+          <Select options={options} />
+          <DropDownTitle>Passe courte</DropDownTitle>
+          <Select title="test" placeholder="lol1" options={options} />
+          <DropDownTitle>Tir</DropDownTitle> <Select options={options} />
+          <DropDownTitle>Dribble</DropDownTitle>
+          <Select title="test" placeholder="lol1" options={options} />
+          <DropDownTitle>Positionnement</DropDownTitle>{" "}
+          <Select options={options} />
+          <DropDownTitle>Controle</DropDownTitle> <Select options={options} />
+        </ColNote>
+        <ColNote>
+          <h3>Defense</h3>
+          <DropDownTitle>Degagement</DropDownTitle>
+          <Select title="test" placeholder="lol1" options={options} />
+          <DropDownTitle>Interception</DropDownTitle>{" "}
+          <Select options={options} />
+          <DropDownTitle>Tackles</DropDownTitle>
+          <Select title="test" placeholder="lol1" options={options} />
+          <DropDownTitle>Positionnement</DropDownTitle> <Select options={options} />
+          <DropDownTitle>Duel Aerien</DropDownTitle>
+          <Select title="test" placeholder="lol1" options={options} />
+          <DropDownTitle>Duel Terrestre</DropDownTitle>{" "}
+          <Select options={options} />
+        </ColNote>
+        <ColNote>
+          <h3>Defense</h3>
+          <DropDownTitle>Degagement</DropDownTitle>
+          <Select title="test" placeholder="lol1" options={options} />
+          <DropDownTitle>Interception</DropDownTitle>{" "}
+          <Select options={options} />
+          <DropDownTitle>Tackles</DropDownTitle>
+          <Select title="test" placeholder="lol1" options={options} />
+          <DropDownTitle>Positionnement</DropDownTitle> <Select options={options} />
+          <DropDownTitle>Duel Aerien</DropDownTitle>
+          <Select title="test" placeholder="lol1" options={options} />
+          <DropDownTitle>Duel Terrestre</DropDownTitle>{" "}
+          <Select options={options} />
+        </ColNote>
+        <ColNote>
+          <h3>Defense</h3>
+          <DropDownTitle>Degagement</DropDownTitle>
+          <Select title="test" placeholder="lol1" options={options} />
+          <DropDownTitle>Interception</DropDownTitle>{" "}
+          <Select options={options} />
+          <DropDownTitle>Tackles</DropDownTitle>
+          <Select title="test" placeholder="lol1" options={options} />
+          <DropDownTitle>Positionnement</DropDownTitle> <Select options={options} />
+          <DropDownTitle>Duel Aerien</DropDownTitle>
+          <Select title="test" placeholder="lol1" options={options} />
+          <DropDownTitle>Duel Terrestre</DropDownTitle>{" "}
+          <Select options={options} />
+        </ColNote>
+      </RowNote>
+    );
+  }
+  playerNote(id) {
+    var players = this.props.fixtureNotes[0];
+    var index = -1;
+    var player;
+
+    for (var i = 0; i < players.length; i++) {
+      if (players[i].id == id) {
+        player = players[i];
+        index = i;
+      }
+    }
+
+    if (index == -1) {
+      player = this.findPlayer(id);
+    }
+
+    // html: `<img src='${image_url}'/> pour le css du div
+    return MySwal.fire({
+      title: `${player.name}`,
+      html: this.showPlayerBoxNote(player),
+      confirmButtonText: "Save",
+      focusConfirm: true,
+      width: 1000,
+      height: 1000,
+      allowOutsideClick: false,
+      showCancelButton: true,
+      preConfirm: () => {
+        const login = Swal.getPopup().querySelector("#login").value;
+        const password = Swal.getPopup().querySelector("#password").value;
+        if (!login || !password) {
+          Swal.showValidationMessage(`Please enter login and password`);
+        }
+        return { login: login, password: password };
+      },
+    }).then((result) => {
+      alert(result.value.login);
+      MySwal.fire(
+        `
+        Login: ${result.value.login}
+        Password: ${result.value.password}
+      `.trim()
+      );
+    });
   }
 
   componentDidMount() {
@@ -165,8 +319,7 @@ class Fixture extends React.Component {
           numberColor: `#${homeTeamNumberColor}`,
           id: lineups.startXI[count].player.id,
           nameColor: `#000000`,
-          onClick: () =>
-          this.playerNote(id),
+          onClick: () => this.playerNote(id),
         });
         count++;
       }
@@ -189,8 +342,7 @@ class Fixture extends React.Component {
           numberColor: `#${homeTeamNumberColor}`,
           id: lineups.startXI[count].player.id,
           nameColor: `#000000`,
-          onClick: () =>
-          this.playerNote(id),
+          onClick: () => this.playerNote(id),
         });
         count++;
       }
@@ -204,8 +356,7 @@ class Fixture extends React.Component {
           numberColor: `#${homeTeamNumberColor}`,
           id: lineups.startXI[count].player.id,
           nameColor: `#000000`,
-          onClick: () =>
-          this.playerNote(id),
+          onClick: () => this.playerNote(id),
         });
         count++;
       }
@@ -563,7 +714,7 @@ class Fixture extends React.Component {
     return (
       <MainBody>
         <SoccerLineUp
-          size="normal"
+          size="responsive"
           color={`#${color}`}
           pattern={pattern}
           homeTeam={this.homeSquad}
