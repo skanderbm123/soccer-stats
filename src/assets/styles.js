@@ -53,6 +53,11 @@ export const ColNote = styled.div`
   flex: 50%;
 `;
 
+export const ColNoteFixture = styled.div`
+  flex: 50%;
+  padding: 3%;
+`;
+
 export const RowNote = styled.div`
   display: flex;
   flex-direction: row;
@@ -225,4 +230,28 @@ export const CountryFlag = styled.img`
   width: 2%;
   height: 2%;
   padding-right: 10px;
+`;
+
+export const PlayerRow = styled.div`
+  background-color: #ffd6d6 ;
+  border-top: 1px solid #f1f3f4;
+  cursor: pointer;
+  display: grid;
+  font-weight: 400;
+  grid-template-areas:
+    "name position nationality age height weight";
+  grid-template-columns: 3fr 2fr 2fr 1fr 1fr 1fr;
+  padding: 5px;
+
+  &:hover {
+    background-color: #00d4b1;
+  }
+`;
+
+export const PlayerNumber = styled.div`
+  grid-area: weight;
+`;
+
+export const PlayerPos = styled.div`
+  grid-area: height;
 `;
