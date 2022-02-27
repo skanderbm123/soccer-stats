@@ -149,4 +149,5 @@ module.exports = {
   getTeamPlayers,
   getTeamPlayerStats,
   getPlayerNotes,
+  updatePlayerNotes,
 };

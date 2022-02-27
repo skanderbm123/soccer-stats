@@ -74,10 +74,14 @@ export const getFixtureById = (id, callback) => {
 };
 
 export const getPlayerNotesByFixtureId = (id, callback) => {
-
   axios.get(`/football/playerNotes/${id}`)
-    .then((fixture) => {
-      callback(fixture.data);
+    .then((players) => {
+      callback(players.data);
     })
+    .catch((err) => console.error(err));
+};
+
+export const updatePlayerNotesByFixtureId = (id, players) => {
+  axios.post(`/football/playerNotes`,{id , players})
     .catch((err) => console.error(err));
 };

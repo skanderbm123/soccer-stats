@@ -333,19 +333,18 @@ const getPlayerStats = (req, res) => {
 
 const getPlayerNotes = (req, res) => {
   const fixture_id = req.params.fixture_id;
-  const fixture = footy.getPlayerNotes(fixture_id);
-  Promise.resolve(fixture)
-    .then((results) => res.status(200).send(results.fixture))
+  const players = footy.getPlayerNotes(fixture_id);
+  Promise.resolve(players)
+    .then((results) => res.status(200).send(results.players))
     .catch((err) => {
       console.log(err);
     });
 };
 
 const updatePlayerNotes = (req, res) => {
-  console.log("TO DO");
-  const fixture_id = req.params.fixture_id;
-  const players = req.params.fixture;
-  const updateDatabase = footy.updatePlayernotes(fixture_id, players);
+  const fixture_id = req.body.id;
+  const players = req.body.players;
+  const updateDatabase = footy.updatePlayerNotes(fixture_id, players);
   Promise.resolve(updateDatabase)
     .then(() => res.status(200).send(players))
     .catch((error) => {

@@ -60,6 +60,15 @@ export const RowNote = styled.div`
   width: 100%;
 `;
 
+export const RowContent = styled.div`
+  display: grid;
+  grid-template-columns: auto auto auto;
+`;
+
+export const RowItem = styled.div`
+  padding: 10px;
+`;
+
 export const DropDownTitle = styled.span`
   float: left;
   padding: 1%;

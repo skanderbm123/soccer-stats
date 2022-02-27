@@ -26,7 +26,19 @@
                     } ,
                     {
                       "id":882,
-                      "name":"David De Gea6"
+                      "name":"David De Gea",
+                      "pass_courte": 1,
+                      "pass_longue": 1,
+                      "tir": 1,
+                      "dribble": 1,
+                      "positionnement": 1,
+                      "controles": 1,
+                      "degagement": 1,
+                      "interceptions": 1,
+                      "tackles": 1,
+                      "duel_aeerien": 1,
+                      "positionnement_defense": 1,
+                      "duel_terrestre": 1
                     } 
                 ,
                 {
