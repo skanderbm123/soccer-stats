@@ -1095,7 +1095,6 @@ class Fixture extends React.Component {
       for (const [key, stats] of Object.entries(
         this.props.fixture[0].statistics[team].statistics
       )) {
-        console.log(this.props.fixture[0].statistics[1].statistics[key]);
         data.push({
           label: stats.type,
           value: stats.value,

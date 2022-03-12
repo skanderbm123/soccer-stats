@@ -27,6 +27,7 @@
     "primeicons": "^5.0.0",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
+    "react-bars": "^0.1.2",
     "react-dom": "^16.13.1",
     "react-event-timeline": "^1.6.3",
     "react-helmet": "^6.1.0",

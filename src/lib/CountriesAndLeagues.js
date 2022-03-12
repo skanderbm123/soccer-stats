@@ -14,12 +14,11 @@ export const assignLeagueOptions = (leagues) => {
   return parsedLeagues;
 };
 
-
 export const assignLiveScore = (liveScores) => {
   const parsedLiveScore = [];
   liveScores.forEach((livescore) => {
-    parsedLiveScore.push({ 
-      fixture: livescore.fixture.id, 
+    parsedLiveScore.push({
+      fixture: livescore.fixture.id,
       time: livescore.fixture.status.elapsed,
       league_id: livescore.league.id,
       league_name: livescore.league.name,
@@ -33,9 +32,27 @@ export const assignLiveScore = (liveScores) => {
       teamA_winner: livescore.teams.away.winner,
       goalH: livescore.goals.home,
       goalA: livescore.goals.away,
-     });
+    });
   });
 
-  parsedLiveScore.sort((a, b) => (a.league_name >= b.league_name) ? 1 : -1)
+  parsedLiveScore.sort((a, b) => (a.league_name >= b.league_name ? 1 : -1));
   return parsedLiveScore;
+};
+
+export const assignFixture = (fixtures) => {
+  const title = [];
+  fixtures.forEach((fixture) => {
+    title.push(fixture.league.name)
+  });
+ 
+  const uniqueKeys = Array.from(new Set(title));
+  let parsedFixtures = new Map();
+  uniqueKeys.forEach((key) => {parsedFixtures.set(key,[])})
+
+
+  fixtures.forEach((fixture) => {
+    parsedFixtures.get(fixture.league.name).push({fixture})
+   });
+
+  return parsedFixtures;
 };

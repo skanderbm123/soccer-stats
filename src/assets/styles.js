@@ -86,7 +86,6 @@ export const ClubInformationSection = styled.div`
   grid-gap: 10px 10px;
   margin-left: auto;
   margin-right: auto;
-  max-height: 365px;
   max-width: 1600px;
   min-width: 250px;
   width: 80vw;

@@ -125,7 +125,8 @@ const getAndUpdateTeamFixtures = (req, res) => {
   console.log('API CALL: GET TEAM FIXTURES');
   axios({
     method: 'GET',
-    url: `https://${hostKey}/v2/fixtures/team/${teamId}/next/50`,
+    url: `https://${hostKey}/v3/fixtures`,
+    params: {season: '2021', team: teamId},
     headers: {
       'content-type': 'application/octet-stream',
       'x-rapidapi-host': hostKey,
@@ -134,7 +135,7 @@ const getAndUpdateTeamFixtures = (req, res) => {
     },
   })
     .then((response) => {
-      const { fixtures } = response.data.api;
+      const fixtures  = response.data.response;
       const updateDatabase = footy.updateTeamFixtures(teamId, fixtures);
       Promise.resolve(updateDatabase)
         .then(() => res.status(200).send(fixtures))

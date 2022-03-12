@@ -5,9 +5,8 @@ import "react-tabs/style/react-tabs.css";
 import SelectCountry from "./SelectCountry";
 import SelectLeague from "./SelectLeague";
 import LeagueStandings from "./LeagueStandings";
-import MyClubs from "./MyClubs";
-import ClubInfomation from "./ClubInfo";
-import TeamFixtures from "./TeamFixtures";
+import TeamFixturesUpcoming from "./TeamFixturesUpcoming";
+import TeamFixturesLive from "./TeamFixturesLive";
 import TeamPlayers from "./TeamPlayers";
 import PlayerHighlightedStats from "./PlayerHighlightedStats";
 import LiveScore from "./LiveScore";
@@ -28,6 +27,7 @@ import {
   assignCountryOptions,
   assignLeagueOptions,
   assignLiveScore,
+  assignFixture,
 } from "../lib/CountriesAndLeagues";
 
 import {
@@ -114,6 +114,10 @@ class SoccerStats extends Component {
     getTeamFixtures(id, (teamHighlightFixtures) =>
       this.setState({ teamHighlightFixtures })
     );
+    getLiveScore((presentLiveScore) => {
+      const livescores = assignLiveScore(presentLiveScore);
+      this.setState({ livescores: livescores });
+    });
     getTeamPlayers(id, (teamPlayers) => this.setState({ teamPlayers }));
   }
 
@@ -162,9 +166,7 @@ class SoccerStats extends Component {
       standings,
       countries,
       leagues,
-      myClubs,
       teamPlayers,
-      teamHighlightInfo,
       playerHighlightInfo,
       teamHighlightFixtures,
       livescores,
@@ -215,21 +217,31 @@ class SoccerStats extends Component {
                   standings={standings}
                   addClubToList={this.addClubToList}
                 />
-                <MyClubs
-                  myClubs={myClubs}
-                  removeClubFromList={this.removeClubFromList}
-                  highlightClubInfo={this.highlightClubInfo}
-                />
               </ClubInformationSection>
             ) : null}
-            {teamHighlightFixtures.length ? (
+             {teamHighlightFixtures.length ? (
               <ClubInformationSection>
-                <ClubInfomation teamHighlightInfo={teamHighlightInfo} />
-                <TeamFixtures
-                  fixtures={teamHighlightFixtures}
+                 <TeamFixturesLive
+                  fixtures={assignFixture(teamHighlightFixtures)}
                   addClubToList={this.addClubToList}
+                  setTabIndex={this.updateTabIndex}
+                  setFixtureId={this.setFixtureId}
                 />
+            
               </ClubInformationSection>
+              
+            ) : null}
+             {teamHighlightFixtures.length ? (
+              <ClubInformationSection>
+                 <TeamFixturesUpcoming
+                  fixtures={assignFixture(teamHighlightFixtures)}
+                  addClubToList={this.addClubToList}
+                  setTabIndex={this.updateTabIndex}
+                  setFixtureId={this.setFixtureId}
+                />
+            
+              </ClubInformationSection>
+              
             ) : null}
             {teamPlayers.length ? (
               <ClubInformationSection>
