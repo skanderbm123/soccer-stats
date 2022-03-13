@@ -164,7 +164,6 @@ const getAndUpdateTeamPlayers = (req, res) => {
     },
   })
     .then((response) => {
-      console.log(teamId);
       const { players } = response.data.api;
       const updateDatabase = footy.updateTeamPlayers(teamId, players);
       Promise.resolve(updateDatabase)

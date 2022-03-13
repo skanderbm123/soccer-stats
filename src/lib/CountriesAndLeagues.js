@@ -41,18 +41,20 @@ export const assignLiveScore = (liveScores) => {
 
 export const assignFixture = (fixtures) => {
   const title = [];
+
   fixtures.forEach((fixture) => {
-    title.push(fixture.league.name)
+    title.push(fixture.league.name);
   });
- 
+
   const uniqueKeys = Array.from(new Set(title));
   let parsedFixtures = new Map();
-  uniqueKeys.forEach((key) => {parsedFixtures.set(key,[])})
-
+  uniqueKeys.forEach((key) => {
+    parsedFixtures.set(key, []);
+  });
 
   fixtures.forEach((fixture) => {
-    parsedFixtures.get(fixture.league.name).push({fixture})
-   });
+    parsedFixtures.get(fixture.league.name).push({ fixture });
+  });
 
   return parsedFixtures;
 };

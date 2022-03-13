@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import React from "react";
+import PropTypes from "prop-types";
+import styled from "styled-components";
 
 const FootballTableContainer = styled.div`
   width: 100%;
@@ -35,8 +35,7 @@ const LeagueTableHeader = styled.div`
   border-top-right-radius: 4px;
   display: grid;
   font-weight: 700;
-  grid-template-areas:
-    "club mp win loss draw gf ga gd pts last";
+  grid-template-areas: "club mp win loss draw gf ga gd pts last";
   grid-template-columns: 7fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 3fr;
   padding: 5px;
   padding-top: 10px;
@@ -49,8 +48,7 @@ const LeagueTableRow = styled.div`
   cursor: pointer;
   display: grid;
   font-weight: 400;
-  grid-template-areas:
-    "club mp win loss draw gf ga gd pts last";
+  grid-template-areas: "club mp win loss draw gf ga gd pts last";
   grid-template-columns: 7fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 3fr;
   padding: 5px;
 
@@ -135,47 +133,62 @@ const ClubInfo = styled.div`
   max-height: 100%;
   padding-left: 10px;
 `;
+class LeagueStandings extends React.Component {
+  constructor() {
+    super();
+    this.state = {};
+    this.setTeamId = this.setTeamId.bind(this);
+    this.addClubToList = this.addClubToList.bind(this);
+  }
+  setTeamId() {}
 
-const LeagueStandings = ({ standings, addClubToList }) => (
-  <FootballTableContainer>
-    <LeagueTableHeader>
-      <Club>Club</Club>
-      <MatchesPlayed>MP</MatchesPlayed>
-      <Wins>W</Wins>
-      <Draws>D</Draws>
-      <Losses>L</Losses>
-      <GoalsFor>GF</GoalsFor>
-      <GoalsAgainst>GA</GoalsAgainst>
-      <GoalDifference>GD</GoalDifference>
-      <Points>Pts</Points>
-      <LastFiveHeader>Last 5</LastFiveHeader>
-    </LeagueTableHeader>
-    <LeagueTable>
-      {standings.map((group) => group.map((team) => (
-        <LeagueTableRow key={team.team_id} onClick={() => addClubToList(team.team_id)}>
-          <Club>
-            <ClubRank>{team.rank}</ClubRank>
-            <ClubLogo src={team.logo} alt={team.teamName} />
-            <ClubInfo>{team.teamName}</ClubInfo>
-          </Club>
-          <MatchesPlayed>{team.all.matchsPlayed}</MatchesPlayed>
-          <Wins>{team.all.win}</Wins>
-          <Draws>{team.all.draw}</Draws>
-          <Losses>{team.all.lose}</Losses>
-          <GoalsFor>{team.all.goalsFor}</GoalsFor>
-          <GoalsAgainst>{team.all.goalsAgainst}</GoalsAgainst>
-          <GoalDifference>{team.goalsDiff}</GoalDifference>
-          <Points>{team.points}</Points>
-          <LastFive>{team.forme}</LastFive>
-        </LeagueTableRow>
-      )))}
-    </LeagueTable>
-  </FootballTableContainer>
-);
+  addClubToList(teamId) {
+    this.props.addClubToList(teamId);
+  }
 
-LeagueStandings.propTypes = {
-  standings: PropTypes.arrayOf(PropTypes.array).isRequired,
-  addClubToList: PropTypes.func.isRequired,
-};
+  render() {
+    return (
+      <FootballTableContainer>
+        <LeagueTableHeader>
+          <Club>Club</Club>
+          <MatchesPlayed>MP</MatchesPlayed>
+          <Wins>W</Wins>
+          <Draws>D</Draws>
+          <Losses>L</Losses>
+          <GoalsFor>GF</GoalsFor>
+          <GoalsAgainst>GA</GoalsAgainst>
+          <GoalDifference>GD</GoalDifference>
+          <Points>Pts</Points>
+          <LastFiveHeader>Last 5</LastFiveHeader>
+        </LeagueTableHeader>
+        <LeagueTable>
+          {this.props.standings.map((group) =>
+            group.map((team) => (
+              <LeagueTableRow
+                key={team.team_id}
+                onClick={() => this.addClubToList(team.team_id)}
+              >
+                <Club>
+                  <ClubRank>{team.rank}</ClubRank>
+                  <ClubLogo src={team.logo} alt={team.teamName} />
+                  <ClubInfo>{team.teamName}</ClubInfo>
+                </Club>
+                <MatchesPlayed>{team.all.matchsPlayed}</MatchesPlayed>
+                <Wins>{team.all.win}</Wins>
+                <Draws>{team.all.draw}</Draws>
+                <Losses>{team.all.lose}</Losses>
+                <GoalsFor>{team.all.goalsFor}</GoalsFor>
+                <GoalsAgainst>{team.all.goalsAgainst}</GoalsAgainst>
+                <GoalDifference>{team.goalsDiff}</GoalDifference>
+                <Points>{team.points}</Points>
+                <LastFive>{team.forme}</LastFive>
+              </LeagueTableRow>
+            ))
+          )}
+        </LeagueTable>
+      </FootballTableContainer>
+    );
+  }
+}
 
 export default LeagueStandings;

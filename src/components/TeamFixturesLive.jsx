@@ -1,8 +1,9 @@
 import React from "react";
-import PropTypes from "prop-types";
 import styled from "styled-components";
 
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import { assignFixture } from "../lib/CountriesAndLeagues";
+import { getTeamFixtures } from "../lib/DatabaseRequests";
 
 const FixturesTable = styled.div`
   background-color: #fff;
@@ -121,16 +122,28 @@ class TeamFixturesLive extends React.Component {
     };
     this.setFixtureId = this.setFixtureId.bind(this);
     this.fixtureBeforeCurrentDate = this.fixtureBeforeCurrentDate.bind(this);
-  }
-  componentDidMount() {
-    let myKeys = [];
-    this.props.fixtures.forEach((value, key) => myKeys.push(key));
-    this.setState(
-      (prevState) => ({ fixtureKeys: myKeys }),
-      () => {}
-    );
+    this.renderMatch = this.renderMatch.bind(this);
+    this.newData = this.newData.bind(this);
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    let myKeys = [];
+    if (this.newData(prevProps, prevState)) {
+      console.log("FROM update ");
+      getTeamFixtures(this.props.teamId, (fixtureMap) => {
+        const newFixtureMap = assignFixture(fixtureMap);
+        newFixtureMap.forEach((value, key) => myKeys.push(key));
+        this.setState(
+          (prevState) => ({ fixtureKeys: myKeys }),
+          () => {}
+        );
+        this.setState(
+          (prevState) => ({ fixtureMap: newFixtureMap }),
+          () => {}
+        );
+      });
+    }
+  }
   setFixtureId(fixtureId) {
     this.props.setFixtureId(fixtureId);
     this.props.setTabIndex(1);
@@ -176,27 +189,40 @@ class TeamFixturesLive extends React.Component {
     }
   }
 
+  newData(prevProps, prevState) {
+    if (prevProps == undefined) {
+      return true;
+    } else {
+      if (prevProps.teamId != this.props.teamId) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   render() {
+    const { fixtureKeys, fixtureMap } = this.state;
     return (
       <section>
-        {this.props.fixtures.size ? (
-          <FixturesTableHeader>
-            <Club>Fixtures Live/Done</Club>
-          </FixturesTableHeader>
-        ) : null}
+        <FixturesTableHeader>
+          <Club>Fixtures Live/Done</Club>
+        </FixturesTableHeader>
+
         <Tabs>
           <TabList>
-            {this.state.fixtureKeys.map((item) => (
+            {fixtureKeys.map((item) => (
               <Tab>{item}</Tab>
             ))}
           </TabList>
 
-          {this.state.fixtureKeys.map((key) => (
+          {fixtureKeys.map((key) => (
             <TabPanel>
               <FixturesTable>
-                {this.props.fixtures
-                  .get(key)
-                  .map((fixture) => this.renderMatch(fixture))}
+                {fixtureMap.has(key)
+                  ? fixtureMap
+                      .get(key)
+                      .map((fixture) => this.renderMatch(fixture))
+                  : null}
               </FixturesTable>
             </TabPanel>
           ))}
