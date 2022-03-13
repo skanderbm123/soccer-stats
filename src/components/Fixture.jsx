@@ -87,8 +87,7 @@ class Fixture extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.fixture.length > 0) {
-      console.log(this.props.fixture[0].fixture.id);
+    if (this.props.fixture > 0) {
       if (this.props.fixture[0].lineups.length > 0) {
         this.homeSquad = this.buildHomeTeam(this.props.fixture[0].lineups[0]);
         this.awaySquad = this.buildAwayTeam(this.props.fixture[0].lineups[1]);
@@ -111,7 +110,6 @@ class Fixture extends React.Component {
     if (this.props.fixture.length > 0) {
       if (prevProps.fixture[0] !== this.props.fixture[0]) {
         if (this.props.fixture[0].lineups.length > 0) {
-          console.log("test3");
           this.homeSquad = this.buildHomeTeam(this.props.fixture[0].lineups[0]);
           this.awaySquad = this.buildAwayTeam(this.props.fixture[0].lineups[1]);
           this.setState({
@@ -613,7 +611,15 @@ class Fixture extends React.Component {
 
   buildHomeTeam(lineups) {
     console.log("Building Home Team");
-    return this.setHomeLineups(lineups);
+    console.log(lineups.formation);
+    console.log(lineups.startXI);
+    if (lineups.formation != null && lineups.startXI.length > 0) {
+      console.log("home lineups not null");
+      return this.setHomeLineups(lineups);
+    } else {
+      console.log("home lineups null");
+      return null;
+    }
   }
 
   setHomeLineups(lineups) {
@@ -624,8 +630,8 @@ class Fixture extends React.Component {
     const homeTeamNumberColor = lineups.team.colors.player.number;
     const homeGoalkeeperColor = lineups.team.colors.goalkeeper.primary;
     const homeGoalkeeperNumberColor = lineups.team.colors.goalkeeper.number;
-    const g_id = lineups.startXI[0].player.id;
 
+    const g_id = lineups.startXI[0].player.id;
     var gk = {
       number: lineups.startXI[0].player.number,
       name: lineups.startXI[0].player.name,
@@ -736,7 +742,15 @@ class Fixture extends React.Component {
 
   buildAwayTeam(lineups) {
     console.log("Building Away Team");
-    return this.setAwayLineups(lineups);
+    console.log(lineups.formation);
+    console.log(lineups.startXI);
+    if (lineups.formation != null) {
+      console.log(" away lineups not null");
+      return this.setAwayLineups(lineups);
+    } else {
+      console.log(" away lineups null");
+      return null;
+    }
   }
 
   setAwayLineups(lineups) {
@@ -747,6 +761,7 @@ class Fixture extends React.Component {
     const awayTeamNumberColor = lineups.team.colors.player.number;
     const awayGoalkeeperColor = lineups.team.colors.goalkeeper.primary;
     const awayGoalkeeperNumberColor = lineups.team.colors.goalkeeper.number;
+
     const g_id = lineups.startXI[0].player.id;
 
     var gk = {
@@ -1074,36 +1089,37 @@ class Fixture extends React.Component {
 
   setStats(team) {
     let data = [];
-
-    if (team == 0) {
-      for (const [key, stats] of Object.entries(
-        this.props.fixture[0].statistics[team].statistics
-      )) {
-        data.push({
-          label: stats.type,
-          value: stats.value,
-          showValue: true,
-          makeUppercase: false,
-          maxValue:
-            stats.value +
-            this.props.fixture[0].statistics[1].statistics[key].value,
-        });
+    if (this.props.fixture[0].statistics.length > 0) {
+      if (team == 0) {
+        for (const [key, stats] of Object.entries(
+          this.props.fixture[0].statistics[team].statistics
+        )) {
+          data.push({
+            label: stats.type,
+            value: stats.value,
+            showValue: true,
+            makeUppercase: false,
+            maxValue:
+              stats.value +
+              this.props.fixture[0].statistics[1].statistics[key].value,
+          });
+        }
       }
-    }
 
-    if (team == 1) {
-      for (const [key, stats] of Object.entries(
-        this.props.fixture[0].statistics[team].statistics
-      )) {
-        data.push({
-          label: stats.type,
-          value: stats.value,
-          showValue: true,
-          makeUppercase: false,
-          maxValue:
-            stats.value +
-            this.props.fixture[0].statistics[0].statistics[key].value,
-        });
+      if (team == 1) {
+        for (const [key, stats] of Object.entries(
+          this.props.fixture[0].statistics[team].statistics
+        )) {
+          data.push({
+            label: stats.type,
+            value: stats.value,
+            showValue: true,
+            makeUppercase: false,
+            maxValue:
+              stats.value +
+              this.props.fixture[0].statistics[0].statistics[key].value,
+          });
+        }
       }
     }
     return data;
@@ -1112,162 +1128,205 @@ class Fixture extends React.Component {
   render() {
     const { color, pattern } = this.state;
     return (
-      <MainBody>
-        <MatchContainer>
-          <MatchTableContainer>
-            <MatchRow>
-              <Box>
-                <TeamFlag src={this.props.fixture[0].teams.home.logo} />
-                <TeamName>{this.props.fixture[0].teams.home.name}</TeamName>
-              </Box>
-              <ScoreAndTime>
-                <Score>
-                  {this.props.fixture[0].goals.home} -{" "}
-                  {this.props.fixture[0].goals.away}
-                </Score>
-                <Time>{this.props.fixture[0].fixture.status.elapsed}"</Time>
-              </ScoreAndTime>
-              <Box>
-                <TeamFlag src={this.props.fixture[0].teams.away.logo} />
-                <TeamName>{this.props.fixture[0].teams.away.name}</TeamName>
-              </Box>
-            </MatchRow>
-          </MatchTableContainer>
-        </MatchContainer>
+      <section>
+        {this.props.fixture.length > 0 ? (
+          <MainBody>
+            <MatchContainer>
+              <MatchTableContainer>
+                <MatchRow>
+                  <Box>
+                    <TeamFlag src={this.props.fixture[0].teams.home.logo} />
+                    <TeamName>{this.props.fixture[0].teams.home.name}</TeamName>
+                  </Box>
+                  <ScoreAndTime>
+                    <Score>
+                      {this.props.fixture[0].goals.home} -{" "}
+                      {this.props.fixture[0].goals.away}
+                    </Score>
+                    <Time>{this.props.fixture[0].fixture.status.elapsed}"</Time>
+                  </ScoreAndTime>
+                  <Box>
+                    <TeamFlag src={this.props.fixture[0].teams.away.logo} />
+                    <TeamName>{this.props.fixture[0].teams.away.name}</TeamName>
+                  </Box>
+                </MatchRow>
+              </MatchTableContainer>
+            </MatchContainer>
+            <SoccerLineUp
+              size="responsive"
+              color={`#${color}`}
+              pattern={pattern}
+              homeTeam={this.homeSquad}
+              awayTeam={this.awaySquad}
+            />
+            <Tabs>
+              <TabList>
+                <Tab>Events</Tab>
+                <Tab>Players</Tab>
+                <Tab>Statistics</Tab>
+              </TabList>
+              <TabPanel>
+                {this.props.fixture[0].events.length > 0 ? (
+                  <Timeline>
+                    {this.props.fixture[0].events.map((event) =>
+                      this.setEvent(event)
+                    )}
+                  </Timeline>
+                ) : (
+                  <p> no events for this fixture </p>
+                )}
+              </TabPanel>
 
-        <SoccerLineUp
-          size="responsive"
-          color={`#${color}`}
-          pattern={pattern}
-          homeTeam={this.homeSquad}
-          awayTeam={this.awaySquad}
-        />
+              <TabPanel>
+                <RowNote>
+                  <ColNoteFixture>
+                    <img
+                      src={this.props.fixture[0].teams.home.logo}
+                      width="8%"
+                    />{" "}
+                    <span>{this.props.fixture[0].teams.home.name}</span>
+                    <RowContent>
+                      <RowItem>
+                        <DropDownTitle>
+                          <h2>Start XI</h2>
+                        </DropDownTitle>
+                      </RowItem>
+                    </RowContent>
+                    {this.props.fixture[0].lineups.length > 0 ? (
+                      this.props.fixture[0].lineups[0].startXI.map((player) => (
+                        <RowContent>
+                          <RowItem>
+                            <PlayerRow
+                              key={player.player.name}
+                              onClick={() => this.playerNote(player.player.id)}
+                            >
+                              {player.player.name}
+                            </PlayerRow>
+                            <PlayerNumber>{player.player.number}</PlayerNumber>
+                            <PlayerPos>{player.player.pos}</PlayerPos>
+                          </RowItem>
+                        </RowContent>
+                      ))
+                    ) : (
+                      <p>Sorry no info available for players</p>
+                    )}
+                    <RowContent>
+                      <RowItem>
+                        <DropDownTitle>
+                          <h2>Substitutes</h2>
+                        </DropDownTitle>
+                      </RowItem>
+                    </RowContent>
+                    {this.props.fixture[0].lineups.length > 0 ? (
+                      this.props.fixture[0].lineups[0].substitutes.map(
+                        (player) => (
+                          <RowContent>
+                            <RowItem>
+                              <PlayerRow
+                                key={player.player.name}
+                                onClick={() =>
+                                  this.playerNote(player.player.id)
+                                }
+                              >
+                                {player.player.name}
+                              </PlayerRow>
+                              <PlayerNumber>
+                                {player.player.number}
+                              </PlayerNumber>
+                              <PlayerPos>{player.player.pos}</PlayerPos>
+                            </RowItem>
+                          </RowContent>
+                        )
+                      )
+                    ) : (
+                      <p>Sorry no info available for players</p>
+                    )}
+                  </ColNoteFixture>
+                  <ColNoteFixture>
+                    <img
+                      src={this.props.fixture[0].teams.away.logo}
+                      width="8%"
+                    />{" "}
+                    <span>{this.props.fixture[0].teams.away.name}</span>
+                    <RowContent>
+                      <RowItem>
+                        <DropDownTitle>
+                          <h2>Start XI</h2>
+                        </DropDownTitle>
+                      </RowItem>
+                    </RowContent>
+                    {this.props.fixture[0].lineups.length > 0 ? (
+                      this.props.fixture[0].lineups[1].startXI.map((player) => (
+                        <RowContent>
+                          <RowItem>
+                            <PlayerRow
+                              key={player.player.name}
+                              onClick={() => this.playerNote(player.player.id)}
+                            >
+                              {player.player.name}
+                            </PlayerRow>
+                            <PlayerNumber>{player.player.number}</PlayerNumber>
+                            <PlayerPos>{player.player.pos}</PlayerPos>
+                          </RowItem>
+                        </RowContent>
+                      ))
+                    ) : (
+                      <p>Sorry no info available for players</p>
+                    )}
+                    <RowContent>
+                      <RowItem>
+                        <DropDownTitle>
+                          <h2>Substitutes</h2>
+                        </DropDownTitle>
+                      </RowItem>
+                    </RowContent>
+                    {this.props.fixture[0].lineups.length > 0 ? (
+                      this.props.fixture[0].lineups[1].substitutes.map(
+                        (player) => (
+                          <RowContent>
+                            <RowItem>
+                              <PlayerRow
+                                key={player.player.name}
+                                onClick={() =>
+                                  this.playerNote(player.player.id)
+                                }
+                              >
+                                {player.player.name}
+                              </PlayerRow>
+                              <PlayerNumber>
+                                {player.player.number}
+                              </PlayerNumber>
+                              <PlayerPos>{player.player.pos}</PlayerPos>
+                            </RowItem>
+                          </RowContent>
+                        )
+                      )
+                    ) : (
+                      <p>Sorry no info available for players</p>
+                    )}
+                  </ColNoteFixture>
+                </RowNote>
+              </TabPanel>
+              <TabPanel>
+                <RowNote>
+                  <ColNoteFixture>
+                    <Bars data={this.setStats(0)} makeUppercase={true} />
+                  </ColNoteFixture>
 
-        <Tabs>
-          <TabList>
-            <Tab>Events</Tab>
-            <Tab>Players</Tab>
-            <Tab>Statistics</Tab>
-          </TabList>
-
-          <TabPanel>
-            <Timeline>
-              {this.props.fixture[0].events.map((event) =>
-                this.setEvent(event)
-              )}
-            </Timeline>
-          </TabPanel>
-
-          <TabPanel>
-            <RowNote>
-              <ColNoteFixture>
-                <img src={this.props.fixture[0].teams.home.logo} width="8%" />{" "}
-                <span>{this.props.fixture[0].teams.home.name}</span>
-                <RowContent>
-                  <RowItem>
-                    <DropDownTitle>
-                      <h2>Start XI</h2>
-                    </DropDownTitle>
-                  </RowItem>
-                </RowContent>
-                {this.props.fixture[0].lineups[0].startXI.map((player) => (
-                  <RowContent>
-                    <RowItem>
-                      <PlayerRow
-                        key={player.player.name}
-                        onClick={() => this.playerNote(player.player.id)}
-                      >
-                        {player.player.name}
-                      </PlayerRow>
-                      <PlayerNumber>{player.player.number}</PlayerNumber>
-                      <PlayerPos>{player.player.pos}</PlayerPos>
-                    </RowItem>
-                  </RowContent>
-                ))}
-                <RowContent>
-                  <RowItem>
-                    <DropDownTitle>
-                      <h2>Substitutes</h2>
-                    </DropDownTitle>
-                  </RowItem>
-                </RowContent>
-                {this.props.fixture[0].lineups[0].substitutes.map((player) => (
-                  <RowContent>
-                    <RowItem>
-                      <PlayerRow
-                        key={player.player.name}
-                        onClick={() => this.playerNote(player.player.id)}
-                      >
-                        {player.player.name}
-                      </PlayerRow>
-                      <PlayerNumber>{player.player.number}</PlayerNumber>
-                      <PlayerPos>{player.player.pos}</PlayerPos>
-                    </RowItem>
-                  </RowContent>
-                ))}
-              </ColNoteFixture>
-              <ColNoteFixture>
-                <img src={this.props.fixture[0].teams.away.logo} width="8%" />{" "}
-                <span>{this.props.fixture[0].teams.away.name}</span>
-                <RowContent>
-                  <RowItem>
-                    <DropDownTitle>
-                      <h2>Start XI</h2>
-                    </DropDownTitle>
-                  </RowItem>
-                </RowContent>
-                {this.props.fixture[0].lineups[1].startXI.map((player) => (
-                  <RowContent>
-                    <RowItem>
-                      <PlayerRow
-                        key={player.player.name}
-                        onClick={() => this.playerNote(player.player.id)}
-                      >
-                        {player.player.name}
-                      </PlayerRow>
-                      <PlayerNumber>{player.player.number}</PlayerNumber>
-                      <PlayerPos>{player.player.pos}</PlayerPos>
-                    </RowItem>
-                  </RowContent>
-                ))}
-                <RowContent>
-                  <RowItem>
-                    <DropDownTitle>
-                      <h2>Substitutes</h2>
-                    </DropDownTitle>
-                  </RowItem>
-                </RowContent>
-                {this.props.fixture[0].lineups[1].substitutes.map((player) => (
-                  <RowContent>
-                    <RowItem>
-                      <PlayerRow
-                        key={player.player.name}
-                        onClick={() => this.playerNote(player.player.id)}
-                      >
-                        {player.player.name}
-                      </PlayerRow>
-                      <PlayerNumber>{player.player.number}</PlayerNumber>
-                      <PlayerPos>{player.player.pos}</PlayerPos>
-                    </RowItem>
-                  </RowContent>
-                ))}
-              </ColNoteFixture>
-            </RowNote>
-          </TabPanel>
-
-          <TabPanel>
-            <RowNote>
-              <ColNoteFixture>
-                <Bars data={this.setStats(0)} makeUppercase={true} />
-              </ColNoteFixture>
-
-              <ColNoteFixture>
-                <Bars data={this.setStats(1)} makeUppercase={true} />
-              </ColNoteFixture>
-            </RowNote>
-          </TabPanel>
-        </Tabs>
-      </MainBody>
+                  <ColNoteFixture>
+                    <Bars data={this.setStats(1)} makeUppercase={true} />
+                  </ColNoteFixture>
+                  {this.props.fixture[0].statistics.length > 0 ? null : (
+                    <p>sorry no stats</p>
+                  )}
+                </RowNote>
+              </TabPanel>
+            </Tabs>
+          </MainBody>
+        ) : (
+          <p>Sorry, pas d'info mon frere</p>
+        )}
+      </section>
     );
   }
 }
