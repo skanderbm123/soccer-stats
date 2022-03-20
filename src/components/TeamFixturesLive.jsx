@@ -126,6 +126,25 @@ class TeamFixturesLive extends React.Component {
     this.newData = this.newData.bind(this);
   }
 
+  componentDidMount(prevProps, prevState) {
+    let myKeys = [];
+    if (this.newData(prevProps, prevState)) {
+      console.log("FROM update ");
+      getTeamFixtures(this.props.teamId, (fixtureMap) => {
+        const newFixtureMap = assignFixture(fixtureMap);
+        newFixtureMap.forEach((value, key) => myKeys.push(key));
+        this.setState(
+          (prevState) => ({ fixtureKeys: myKeys }),
+          () => {}
+        );
+        this.setState(
+          (prevState) => ({ fixtureMap: newFixtureMap }),
+          () => {}
+        );
+      });
+    }
+  }
+
   componentDidUpdate(prevProps, prevState) {
     let myKeys = [];
     if (this.newData(prevProps, prevState)) {

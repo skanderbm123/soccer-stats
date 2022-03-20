@@ -1,15 +1,51 @@
 import React, { Component } from "react";
-import { MainBody } from "../assets/styles";
+import {
+  CenterBody,
+  MainBody,
+  RowNote,
+  ColNote,
+  DropDownTitle,
+  RowContent,
+  RowItem,
+} from "../assets/styles";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import Select from "react-select";
 import { assignFixture } from "../lib/CountriesAndLeagues";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import { Button, Row, Col } from "react-bootstrap";
+import styled from "styled-components";
 import {
   updatePlayerNotesByFixtureId,
   getTeamFixtures,
 } from "../lib/DatabaseRequests";
+import { Card, Image } from "semantic-ui-react";
+
+const GameInfoContainer = styled.div`
+  align-items: center;
+  align-self: center;
+  display: flex;
+  flex-flow: column;
+  font-weight: 700;
+  grid-area: date
+  justify-content: center;
+  min-width: 100px;
+`;
+
+const GameInfo = styled.span`
+  font-size: 13px;
+  font-weight: 400;
+`;
 
 const MySwal = withReactContent(Swal);
+const parseDate = (date) => new Date(date).toDateString();
+const parseTime = (date) =>
+  new Date(date).toLocaleTimeString([], {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+const currentTime = new Date().toISOString();
 
 class Player extends React.Component {
   constructor(props) {
@@ -52,15 +88,17 @@ class Player extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.showSwal = this.showSwal.bind(this);
     this.newData = this.newData.bind(this);
+    this.renderMatch = this.renderMatch.bind(this);
+    this.seeNote = this.seeNote.bind(this);
+    this.fixtureBeforeCurrentDate = this.fixtureBeforeCurrentDate.bind(this);
+    this.renderStatsNotes = this.renderStatsNotes.bind(this);
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidMount(prevProps, prevState) {
     let myKeys = [];
-    console.log("FROM update in PLAYER ");
+    console.log("FROM Mount in PLAYER");
     if (this.newData(prevProps, prevState)) {
-      console.log("inside ");
-      console.log(this.props.teamId);
-      console.log(this.props.selectedFixtureNotes);
+      console.log("inside MOUNT ");
       getTeamFixtures(this.props.teamId, (fixtureMap) => {
         const newFixtureMap = assignFixture(fixtureMap);
         newFixtureMap.forEach((value, key) => myKeys.push(key));
@@ -73,6 +111,30 @@ class Player extends React.Component {
           () => {}
         );
       });
+    } else {
+      console.log("outside MOUNT");
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    let myKeys = [];
+    console.log("FROM update in PLAYER");
+    if (this.newData(prevProps, prevState)) {
+      console.log("inside ");
+      getTeamFixtures(this.props.teamId, (fixtureMap) => {
+        const newFixtureMap = assignFixture(fixtureMap);
+        newFixtureMap.forEach((value, key) => myKeys.push(key));
+        this.setState(
+          (prevState) => ({ fixtureKeys: myKeys }),
+          () => {}
+        );
+        this.setState(
+          (prevState) => ({ fixtureMap: newFixtureMap }),
+          () => {}
+        );
+      });
+    } else {
+      console.log("outside  UPDATE");
     }
   }
 
@@ -459,7 +521,7 @@ class Player extends React.Component {
     );
   }
 
-  showSwal(player, players, index) {
+  showSwal(player, players, index, fixtureId) {
     return MySwal.fire({
       title: `${player.name}`,
       html: this.showPlayerBoxNote(player),
@@ -491,10 +553,7 @@ class Player extends React.Component {
         } else {
           players.push(player);
         }
-        updatePlayerNotesByFixtureId(
-          this.props.fixture[0].fixture.id.toString(),
-          players
-        );
+        updatePlayerNotesByFixtureId(fixtureId.toString(), players);
       }
 
       this.setState(
@@ -517,33 +576,50 @@ class Player extends React.Component {
     });
   }
 
-  playerNote(id) {
-    var players = this.props.fixtureNotes;
+  playerNote(id, fixtureId) {
+    var fixtures = this.props.selectedFixtureNotes;
     var index = -1;
     var player;
+    var players;
+    var found = false;
 
-    for (var i = 0; i < players.length; i++) {
-      if (players[i].id == id) {
-        player = players[i];
-        index = i;
+    for (const [key, fixture] of Object.entries(fixtures)) {
+      if (fixture._id == fixtureId) {
+        for (const [key, player] of Object.entries(fixture)) {
+          if (key == "players") {
+            players = player;
+            found = true;
+          }
+        }
       }
     }
-    if (index == -1) {
-      player = this.findPlayer(id);
-      player.pass_courte = 0;
-      player.pass_longue = 0;
-      player.tir = 0;
-      player.dribble = 0;
-      player.positionnement = 0;
-      player.controles = 0;
-      player.degagement = 0;
-      player.interceptions = 0;
-      player.tackles = 0;
-      player.duel_aeerien = 0;
-      player.positionnement_defense = 0;
-      player.duel_terrestre = 0;
+
+    if (found) {
+      for (var i = 0; i < players.length; i++) {
+        if (players[i].id == id) {
+          player = players[i];
+          index = i;
+        }
+      }
+    } else {
+      return null;
     }
 
+    if (index == -1) {
+      return null;
+    }
+
+    return (
+      <Button
+        variant="primary"
+        onClick={() => this.seeNote(player, players, index, fixtureId)}
+      >
+        See Player Notes
+      </Button>
+    );
+  }
+
+  seeNote(player, players, index, fixtureId) {
     this.setState(
       {
         pass_courte: player.pass_courte,
@@ -560,20 +636,277 @@ class Player extends React.Component {
         duel_terrestre: player.duel_terrestre,
       },
       () => {
-        this.showSwal(player, players, index);
+        this.showSwal(player, players, index, fixtureId);
       }
     );
   }
 
+  renderMatch(fixture) {
+    for (const [key, fixture] of Object.entries(fixture)) {
+      return this.fixtureBeforeCurrentDate(fixture.fixture.date) ? (
+        <Row
+          className="row gx-0"
+          style={{
+            border: "1px solid #ccc",
+            marginBottom: "1%",
+            marginTop: "1%",
+          }}
+        >
+          <Col xs lg="2">
+            {" "}
+            <img
+              src={fixture.teams.home.logo}
+              alt={fixture.teams.home.name}
+              width="60"
+              padding="2%"
+              marginRight="4%"
+            />
+            {fixture.teams.home.name}
+          </Col>
+          <Col xs lg="6">
+            <GameInfoContainer>
+              <GameInfo>{parseTime(fixture.fixture.date)}</GameInfo>
+              <GameInfo>{parseDate(fixture.fixture.date)}</GameInfo>
+              <GameInfo>{fixture.league.name}</GameInfo>
+            </GameInfoContainer>
+          </Col>
+          <Col xs lg="2">
+            {fixture.teams.away.name}
+            <img
+              src={fixture.teams.away.logo}
+              alt={fixture.teams.away.logo}
+              width="60"
+              padding="2%"
+              marginLeft="4%"
+            />
+          </Col>
+          <Col
+            xs
+            lg="1"
+            className="d-flex align-items-center justify-content-center"
+          >
+            <CenterBody>
+              <Button
+                variant="primary"
+                onClick={() => this.setFixtureId(fixture.fixture.id)}
+              >
+                See Fixture
+              </Button>
+            </CenterBody>
+          </Col>
+          <Col
+            xs
+            lg="1"
+            className="d-flex align-items-center justify-content-center"
+          >
+            <CenterBody>
+              {this.playerNote(this.props.player.player_id, fixture.fixture.id)}
+            </CenterBody>
+          </Col>
+        </Row>
+      ) : null;
+    }
+  }
+
+  setFixtureId(fixtureId) {
+    this.props.setFixtureId(fixtureId);
+    this.props.setTabIndex(3);
+  }
+
+  fixtureBeforeCurrentDate(date) {
+    if (currentTime >= date) {
+      return true;
+    }
+    return false;
+  }
+
+  renderStatsNotes() {
+    return (
+      <RowNote>
+        <Card xs lg="2">
+          <ColNote>
+            <h3>Attaque</h3>
+            <RowContent>
+              <RowItem>
+                <DropDownTitle>Duel terrestre</DropDownTitle>
+              </RowItem>
+              <RowItem>
+                <input size="2" disabled></input>
+              </RowItem>
+            </RowContent>
+            <RowContent>
+              <RowItem>
+                <DropDownTitle>Duel terrestre</DropDownTitle>
+              </RowItem>
+              <RowItem>
+                <input size="2" disabled></input>
+              </RowItem>
+            </RowContent>
+            <RowContent>
+              <RowItem>
+                <DropDownTitle>Duel terrestre</DropDownTitle>
+              </RowItem>
+              <RowItem>
+                <input size="2" disabled></input>
+              </RowItem>
+            </RowContent>
+            <RowContent>
+              <RowItem>
+                <DropDownTitle>Duel terrestre</DropDownTitle>
+              </RowItem>
+              <RowItem>
+                <input size="2" disabled></input>
+              </RowItem>
+            </RowContent>
+            <RowContent>
+              <RowItem>
+                <DropDownTitle>Duel terrestre</DropDownTitle>
+              </RowItem>
+              <RowItem>
+                <input size="2" disabled></input>
+              </RowItem>
+            </RowContent>
+            <RowContent>
+              <RowItem>
+                <DropDownTitle>Duel terrestre</DropDownTitle>
+              </RowItem>
+              <RowItem>
+                <input size="2" disabled></input>
+              </RowItem>
+            </RowContent>
+          </ColNote>
+        </Card>
+        <Card xs lg="2">
+          <ColNote>
+            <h3>Attaque</h3>
+            <RowContent>
+              <RowItem>
+                <DropDownTitle>Duel terrestre</DropDownTitle>
+              </RowItem>
+              <RowItem>
+                <input size="2" disabled></input>
+              </RowItem>
+            </RowContent>
+            <RowContent>
+              <RowItem>
+                <DropDownTitle>Duel terrestre</DropDownTitle>
+              </RowItem>
+              <RowItem>
+                <input size="2" disabled></input>
+              </RowItem>
+            </RowContent>
+            <RowContent>
+              <RowItem>
+                <DropDownTitle>Duel terrestre</DropDownTitle>
+              </RowItem>
+              <RowItem>
+                <input size="2" disabled></input>
+              </RowItem>
+            </RowContent>
+            <RowContent>
+              <RowItem>
+                <DropDownTitle>Duel terrestre</DropDownTitle>
+              </RowItem>
+              <RowItem>
+                <input size="2" disabled></input>
+              </RowItem>
+            </RowContent>
+            <RowContent>
+              <RowItem>
+                <DropDownTitle>Duel terrestre</DropDownTitle>
+              </RowItem>
+              <RowItem>
+                <input size="2" disabled></input>
+              </RowItem>
+            </RowContent>
+            <RowContent>
+              <RowItem>
+                <DropDownTitle>Duel terrestre</DropDownTitle>
+              </RowItem>
+              <RowItem>
+                <input size="2" disabled></input>
+              </RowItem>
+            </RowContent>
+          </ColNote>
+        </Card>
+      </RowNote>
+    );
+  }
+
   render() {
+    const { fixtureKeys, fixtureMap } = this.state;
     return (
       <section>
-        {false ? (
-          <MainBody></MainBody>
-        ) : (
+        {this.props.teamId != 0 ? (
           <MainBody>
-            
+            {this.props.teamId != 0 ? (
+              <CenterBody>
+                <Row>
+                  <Col xs lg="3">
+                    <Card>
+                      <Image
+                        src={`https://media.api-sports.io/football/players/${this.props.player.player_id}.png`}
+                        wrapped
+                        ui={false}
+                      />
+                      <Card.Content>
+                        <Card.Header>
+                          {this.props.player.player_name}
+                        </Card.Header>
+                        <Card.Meta>
+                          <span className="date">
+                            Nationality: {this.props.player.nationality}
+                          </span>
+                        </Card.Meta>
+                        <Card.Description>
+                          Full Name:{" "}
+                          {this.props.player.firstname +
+                            " " +
+                            this.props.player.lastname}
+                          <br />
+                          Age: {this.props.player.age}
+                          <br />
+                          Position: {this.props.player.position}
+                          <br />
+                          Height: {this.props.player.height}
+                        </Card.Description>
+                      </Card.Content>
+                    </Card>
+                  </Col>
+                  <Col xs lg="4">
+                    {" "}
+                    {this.renderStatsNotes()}
+                  </Col>
+                </Row>
+              </CenterBody>
+            ) : (
+              <CenterBody>
+                {" "}
+                <p> no player information available </p>
+              </CenterBody>
+            )}
+            {this.props.player.player_id != null ? (
+              <Tabs>
+                <TabList>
+                  {fixtureKeys.map((item) => (
+                    <Tab>{item}</Tab>
+                  ))}
+                </TabList>
+
+                {fixtureKeys.map((key) => (
+                  <TabPanel>
+                    {fixtureMap.has(key)
+                      ? fixtureMap
+                          .get(key)
+                          .map((fixture) => this.renderMatch(fixture))
+                      : null}
+                  </TabPanel>
+                ))}
+              </Tabs>
+            ) : null}
           </MainBody>
+        ) : (
+          <p> no player is currently shown</p>
         )}
       </section>
     );

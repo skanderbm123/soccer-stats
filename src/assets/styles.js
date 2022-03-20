@@ -232,13 +232,12 @@ export const CountryFlag = styled.img`
 `;
 
 export const PlayerRow = styled.div`
-  background-color: #ffd6d6 ;
+  background-color: #ffd6d6;
   border-top: 1px solid #f1f3f4;
   cursor: pointer;
   display: grid;
   font-weight: 400;
-  grid-template-areas:
-    "name position nationality age height weight";
+  grid-template-areas: "name position nationality age height weight";
   grid-template-columns: 3fr 2fr 2fr 1fr 1fr 1fr;
   padding: 5px;
 
@@ -256,5 +255,7 @@ export const PlayerPos = styled.div`
 `;
 
 export const CenterBody = styled.div`
-  grid-area: height;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

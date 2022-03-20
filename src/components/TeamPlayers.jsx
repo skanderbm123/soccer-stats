@@ -1,10 +1,10 @@
 import React from "react";
-import PropTypes from "prop-types";
 import styled from "styled-components";
 
 const TeamPlayersContainer = styled.div`
   max-height: 300px;
   width: 100%;
+  min-height:  367px;
 `;
 
 const TeamPlayersTabelContainer = styled.div`
@@ -110,6 +110,7 @@ class TeamPlayers extends React.Component {
   }
 
   setPlayer(player) {
+    this.props.highlightPlayerInfo(player.player_id)
     this.props.setPlayer(player);
   }
 

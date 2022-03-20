@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import "react-tabs/style/react-tabs.css";
 
 import SelectCountry from "./SelectCountry";
 import SelectLeague from "./SelectLeague";
@@ -8,7 +7,6 @@ import LeagueStandings from "./LeagueStandings";
 import TeamFixturesUpcoming from "./TeamFixturesUpcoming";
 import TeamFixturesLive from "./TeamFixturesLive";
 import TeamPlayers from "./TeamPlayers";
-import PlayerHighlightedStats from "./PlayerHighlightedStats";
 import Player from "./Player";
 import LiveScore from "./LiveScore";
 import {
@@ -238,6 +236,17 @@ class SoccerStats extends Component {
               </ClubInformationSection>
             ) : null}
 
+            {teamPlayers.length ? (
+              <ClubInformationSection>
+                <TeamPlayers
+                  players={teamPlayers}
+                  highlightPlayerInfo={this.highlightPlayerInfo}
+                  setPlayer={this.setPlayer}
+                  setTabIndex={this.updateTabIndex}
+                />
+              </ClubInformationSection>
+            ) : null}
+
             <ClubInformationSection>
               <TeamFixturesLive
                 addClubToList={this.addClubToList}
@@ -255,27 +264,16 @@ class SoccerStats extends Component {
                 setFixtureId={this.setFixtureId}
               />
             </ClubInformationSection>
-
-            {teamPlayers.length ? (
-              <ClubInformationSection>
-                <TeamPlayers
-                  players={teamPlayers}
-                  highlightPlayerInfo={this.highlightPlayerInfo}
-                  setPlayer={this.setPlayer}
-                  setTabIndex={this.updateTabIndex}
-                />
-                <PlayerHighlightedStats
-                  playerHighlightInfo={playerHighlightInfo}
-                />
-              </ClubInformationSection>
-            ) : null}
           </TabPanel>
 
           <TabPanel>
             <Player
               selectedFixtureNotes={selectedFixtureNotes}
+              playerHighlightInfo={playerHighlightInfo}
               teamId={teamId}
               player={player}
+              setFixtureId={this.setFixtureId}
+              setTabIndex={this.updateTabIndex}
             ></Player>
           </TabPanel>
 
