@@ -30,7 +30,7 @@ class LiveScore extends React.Component {
 
   setFixtureId(fixtureId) {
     this.props.setFixtureId(fixtureId);
-    this.props.setTabIndex(1);
+    this.props.setTabIndex(3);
   }
 
   createNewTableForDifferentLeague(currentLeague, newLeague) {

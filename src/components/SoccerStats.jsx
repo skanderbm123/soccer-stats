@@ -9,6 +9,7 @@ import TeamFixturesUpcoming from "./TeamFixturesUpcoming";
 import TeamFixturesLive from "./TeamFixturesLive";
 import TeamPlayers from "./TeamPlayers";
 import PlayerHighlightedStats from "./PlayerHighlightedStats";
+import Player from "./Player";
 import LiveScore from "./LiveScore";
 import {
   getFootballStandings,
@@ -19,14 +20,14 @@ import {
   getPlayerStats,
   getLiveScore,
   getFixtureById,
-  getPlayerNotesByFixtureId
+  getPlayerNotesByFixtureId,
+  getPlayerNotesByPlayerId,
 } from "../lib/DatabaseRequests";
 
 import {
   assignCountryOptions,
   assignLeagueOptions,
   assignLiveScore,
-  assignFixture,
 } from "../lib/CountriesAndLeagues";
 
 import {
@@ -54,6 +55,8 @@ class SoccerStats extends Component {
       teamId: 0,
       fixture: [],
       fixtureNotes: [],
+      selectedFixtureNotes: [],
+      player: Object,
     };
     this.addClubToList = this.addClubToList.bind(this);
     this.removeClubFromList = this.removeClubFromList.bind(this);
@@ -64,7 +67,9 @@ class SoccerStats extends Component {
     this.updateTabIndex = this.updateTabIndex.bind(this);
     this.getLiveScore = this.getLiveScore.bind(this);
     this.getFixtureById = this.getFixtureById.bind(this);
+    this.getPlayerInfo = this.getPlayerInfo.bind(this);
     this.setFixtureId = this.setFixtureId.bind(this);
+    this.setPlayer = this.setPlayer.bind(this);
     this.setTeamId = this.setTeamId.bind(this);
   }
 
@@ -74,7 +79,7 @@ class SoccerStats extends Component {
       this.setState({ standings });
       this.updateCountryLeagueList({ value: "France" });
       //this.highlightClubInfo(63);
-     // this.addClubToList(63);
+      // this.addClubToList(63);
       //this.highlightPlayerInfo(19130);
       this.getLiveScore();
     });
@@ -110,7 +115,6 @@ class SoccerStats extends Component {
   }
 
   highlightClubInfo(id) {
-   
     getTeamInfo(id, (teamHighlightInfo) => {
       this.setState({ teamHighlightInfo });
     });
@@ -122,6 +126,7 @@ class SoccerStats extends Component {
   }
 
   highlightPlayerInfo(id) {
+    console.log("PLAYER ID: " + id);
     getPlayerStats(id, (playerHighlightInfo) =>
       this.setState({ playerHighlightInfo })
     );
@@ -153,17 +158,33 @@ class SoccerStats extends Component {
 
   getFixtureById(id) {
     getFixtureById(id, (fixture) => this.setState({ fixture }));
-    getPlayerNotesByFixtureId(id, (fixtureNotes) => this.setState({ fixtureNotes }));
+    getPlayerNotesByFixtureId(id, (fixtureNotes) =>
+      this.setState({ fixtureNotes })
+    );
   }
 
   setFixtureId(fixtureId) {
-    console.log(fixtureId)
+    console.log(fixtureId);
     this.setState({ fixtureId: fixtureId });
     this.getFixtureById(fixtureId);
   }
 
   setTeamId(teamId) {
     this.setState({ teamId: teamId });
+  }
+
+  setPlayer(player) {
+    this.getPlayerInfo(player, this.state.teamId);
+    this.updateTabIndex(1);
+  }
+
+  getPlayerInfo(player, teamId) {
+    this.setTeamId(teamId);
+    this.setState({ player: player });
+    getPlayerNotesByPlayerId(player.player_id, (selectedFixtureNotes) => {
+      const playerFixturesNotes = selectedFixtureNotes;
+      this.setState({ selectedFixtureNotes: playerFixturesNotes });
+    });
   }
 
   render() {
@@ -179,7 +200,9 @@ class SoccerStats extends Component {
       fixtureId,
       fixture,
       fixtureNotes,
-      teamId
+      teamId,
+      selectedFixtureNotes,
+      player,
     } = this.state;
     return (
       <MainBody>
@@ -189,22 +212,11 @@ class SoccerStats extends Component {
           onSelect={(index) => this.updateTabIndex(index)}
         >
           <TabList>
+            <Tab>Season</Tab>
+            <Tab>Player</Tab>
             <Tab>Live Score</Tab>
             <Tab>Fixture</Tab>
-            <Tab>Other</Tab>
           </TabList>
-
-          <TabPanel>
-            <LiveScore
-              livescores={livescores}
-              setTabIndex={this.updateTabIndex}
-              setFixtureId={this.setFixtureId}
-            />
-          </TabPanel>
-
-          <TabPanel>
-            <Fixture fixture={fixture} fixtureId={fixtureId} fixtureNotes={fixtureNotes} />
-          </TabPanel>
 
           <TabPanel>
             <ClubInformationSection>
@@ -225,38 +237,62 @@ class SoccerStats extends Component {
                 />
               </ClubInformationSection>
             ) : null}
-            
-              <ClubInformationSection>
-                 <TeamFixturesLive
-                  addClubToList={this.addClubToList}
-                  setTabIndex={this.updateTabIndex}
-                  teamId={teamId}
-                  setFixtureId={this.setFixtureId}
-                />
-            
-              </ClubInformationSection>
-              
-              <ClubInformationSection>
-                 <TeamFixturesUpcoming
-                  addClubToList={this.addClubToList}
-                  setTabIndex={this.updateTabIndex}
-                  teamId={teamId}
-                  setFixtureId={this.setFixtureId}
-                />
-            
-              </ClubInformationSection>
+
+            <ClubInformationSection>
+              <TeamFixturesLive
+                addClubToList={this.addClubToList}
+                setTabIndex={this.updateTabIndex}
+                teamId={teamId}
+                setFixtureId={this.setFixtureId}
+              />
+            </ClubInformationSection>
+
+            <ClubInformationSection>
+              <TeamFixturesUpcoming
+                addClubToList={this.addClubToList}
+                setTabIndex={this.updateTabIndex}
+                teamId={teamId}
+                setFixtureId={this.setFixtureId}
+              />
+            </ClubInformationSection>
 
             {teamPlayers.length ? (
               <ClubInformationSection>
                 <TeamPlayers
                   players={teamPlayers}
                   highlightPlayerInfo={this.highlightPlayerInfo}
+                  setPlayer={this.setPlayer}
+                  setTabIndex={this.updateTabIndex}
                 />
                 <PlayerHighlightedStats
                   playerHighlightInfo={playerHighlightInfo}
                 />
               </ClubInformationSection>
             ) : null}
+          </TabPanel>
+
+          <TabPanel>
+            <Player
+              selectedFixtureNotes={selectedFixtureNotes}
+              teamId={teamId}
+              player={player}
+            ></Player>
+          </TabPanel>
+
+          <TabPanel>
+            <LiveScore
+              livescores={livescores}
+              setTabIndex={this.updateTabIndex}
+              setFixtureId={this.setFixtureId}
+            />
+          </TabPanel>
+
+          <TabPanel>
+            <Fixture
+              fixture={fixture}
+              fixtureId={fixtureId}
+              fixtureNotes={fixtureNotes}
+            />
           </TabPanel>
         </Tabs>
       </MainBody>

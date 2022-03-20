@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import React from "react";
+import PropTypes from "prop-types";
+import styled from "styled-components";
 
 const TeamPlayersContainer = styled.div`
   max-height: 300px;
@@ -36,8 +36,7 @@ const TeamPlayersTabelHeader = styled.div`
   border-top-right-radius: 4px;
   display: grid;
   font-weight: 700;
-  grid-template-areas:
-    "name position nationality age height weight";
+  grid-template-areas: "name position nationality age height weight";
   grid-template-columns: 3fr 2fr 2fr 1fr 1fr 1fr;
   min-width: 100%;
   padding: 5px;
@@ -50,8 +49,7 @@ const TeamPlayersTabelRow = styled.div`
   cursor: pointer;
   display: grid;
   font-weight: 400;
-  grid-template-areas:
-    "name position nationality age height weight";
+  grid-template-areas: "name position nationality age height weight";
   grid-template-columns: 3fr 2fr 2fr 1fr 1fr 1fr;
   padding: 5px;
 
@@ -105,40 +103,47 @@ const PlayerLastName = styled.div`
   padding-left: 10px;
 `;
 
-const TeamPlayers = ({ players, highlightPlayerInfo }) => (
-  <TeamPlayersContainer>
-    <TeamPlayersTabelHeader>
-      <PlayerName>Name</PlayerName>
-      <PlayerPosition>Position</PlayerPosition>
-      <PlayerNationality>Nationality</PlayerNationality>
-      <PlayerAge>Age</PlayerAge>
-      <PlayerHeight>Height</PlayerHeight>
-      <PlayerWeight>Weight</PlayerWeight>
-    </TeamPlayersTabelHeader>
-    <TeamPlayersTabelContainer>
-      {players.map((player) => (
-        <TeamPlayersTabelRow
-          key={player.player_id}
-          onClick={() => highlightPlayerInfo(player.player_id)}
-        >
-          <PlayerName>
-            <PlayerFirstName>{`${player.firstname[0]}.`}</PlayerFirstName>
-            <PlayerLastName>{player.lastname}</PlayerLastName>
-          </PlayerName>
-          <PlayerPosition>{player.position}</PlayerPosition>
-          <PlayerNationality>{player.nationality}</PlayerNationality>
-          <PlayerAge>{player.age}</PlayerAge>
-          <PlayerHeight>{player.height}</PlayerHeight>
-          <PlayerWeight>{player.weight}</PlayerWeight>
-        </TeamPlayersTabelRow>
-      ))}
-    </TeamPlayersTabelContainer>
-  </TeamPlayersContainer>
-);
+class TeamPlayers extends React.Component {
+  constructor(props) {
+    super(props);
+    this.setPlayer = this.setPlayer.bind(this);
+  }
 
-TeamPlayers.propTypes = {
-  players: PropTypes.arrayOf(PropTypes.object).isRequired,
-  highlightPlayerInfo: PropTypes.func.isRequired,
-};
+  setPlayer(player) {
+    this.props.setPlayer(player);
+  }
 
+  render() {
+    return (
+      <TeamPlayersContainer>
+        <TeamPlayersTabelHeader>
+          <PlayerName>Name</PlayerName>
+          <PlayerPosition>Position</PlayerPosition>
+          <PlayerNationality>Nationality</PlayerNationality>
+          <PlayerAge>Age</PlayerAge>
+          <PlayerHeight>Height</PlayerHeight>
+          <PlayerWeight>Weight</PlayerWeight>
+        </TeamPlayersTabelHeader>
+        <TeamPlayersTabelContainer>
+          {this.props.players.map((player) => (
+            <TeamPlayersTabelRow
+              key={player.player_id}
+              onClick={() => this.setPlayer(player)}
+            >
+              <PlayerName>
+                <PlayerFirstName>{`${player.firstname[0]}.`}</PlayerFirstName>
+                <PlayerLastName>{player.lastname}</PlayerLastName>
+              </PlayerName>
+              <PlayerPosition>{player.position}</PlayerPosition>
+              <PlayerNationality>{player.nationality}</PlayerNationality>
+              <PlayerAge>{player.age}</PlayerAge>
+              <PlayerHeight>{player.height}</PlayerHeight>
+              <PlayerWeight>{player.weight}</PlayerWeight>
+            </TeamPlayersTabelRow>
+          ))}
+        </TeamPlayersTabelContainer>
+      </TeamPlayersContainer>
+    );
+  }
+}
 export default TeamPlayers;

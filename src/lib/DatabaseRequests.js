@@ -81,6 +81,15 @@ export const getPlayerNotesByFixtureId = (id, callback) => {
     .catch((err) => console.error(err));
 };
 
+export const getPlayerNotesByPlayerId = (id, callback) => {
+  axios.get(`/football/playerNotes/players/${id}`)
+    .then((players) => {
+      callback(players.data);
+    })
+    .catch((err) => console.error(err));
+};
+
+
 export const updatePlayerNotesByFixtureId = (id, players) => {
   axios.post(`/football/playerNotes`,{id , players})
     .catch((err) => console.error(err));

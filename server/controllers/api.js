@@ -353,6 +353,16 @@ const updatePlayerNotes = (req, res) => {
     });
 };
 
+const getAllPlayerNotesById = (req, res) => {
+  const player_id = req.params.player_id;
+  const listFixtures = footy.getPlayerNotesById(player_id);
+  Promise.resolve(listFixtures)
+    .then((listFixtures) => res.status(200).send(listFixtures))
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
 module.exports = {
   getAndUpdateCountries,
   getAndUpdateLeagues,
@@ -371,5 +381,6 @@ module.exports = {
   getPlayerNotes,
   getLiveScore,
   getFixtureById,
+  getAllPlayerNotesById,
   updatePlayerNotes,
 };

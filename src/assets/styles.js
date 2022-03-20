@@ -254,3 +254,7 @@ export const PlayerNumber = styled.div`
 export const PlayerPos = styled.div`
   grid-area: height;
 `;
+
+export const CenterBody = styled.div`
+  grid-area: height;
+`;
