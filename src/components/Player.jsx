@@ -7,6 +7,9 @@ import {
   DropDownTitle,
   RowContent,
   RowItem,
+  ScoreAndTime,
+  Score,
+  Time,
 } from "../assets/styles";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -665,6 +668,10 @@ class Player extends React.Component {
           </Col>
           <Col xs lg="6">
             <GameInfoContainer>
+              <GameInfo>
+                {fixture.goals.home} - {fixture.goals.away}
+              </GameInfo>
+              <GameInfo>{fixture.fixture.status.elapsed}"</GameInfo>
               <GameInfo>{parseTime(fixture.fixture.date)}</GameInfo>
               <GameInfo>{parseDate(fixture.fixture.date)}</GameInfo>
               <GameInfo>{fixture.league.name}</GameInfo>

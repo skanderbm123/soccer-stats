@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import { assignFixture } from "../lib/CountriesAndLeagues";
 import { getTeamFixtures } from "../lib/DatabaseRequests";
-
+import { ScoreAndTime, Score, Time } from "../assets/styles";
 const FixturesTable = styled.div`
   background-color: #fff;
   border-bottom-left-radius: 4px;
@@ -191,6 +191,10 @@ class TeamFixturesLive extends React.Component {
             {fixture.teams.home.name}
           </TeamOne>
           <GameInfoContainer>
+            <GameInfo>
+              {fixture.goals.home} - {fixture.goals.away}
+            </GameInfo>
+            <GameInfo>{fixture.fixture.status.elapsed}"</GameInfo>
             <GameInfo>{parseTime(fixture.fixture.date)}</GameInfo>
             <GameInfo>{parseDate(fixture.fixture.date)}</GameInfo>
             <GameInfo>{fixture.league.name}</GameInfo>
