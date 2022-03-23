@@ -2,14 +2,13 @@ import React, { Component } from "react";
 import {
   CenterBody,
   MainBody,
-  RowNote,
+  RowStatsNote,
   ColNote,
+  RowNote,
   DropDownTitle,
+  StatsTitle,
   RowContent,
   RowItem,
-  ScoreAndTime,
-  Score,
-  Time,
 } from "../assets/styles";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -37,6 +36,7 @@ const GameInfoContainer = styled.div`
 
 const GameInfo = styled.span`
   font-size: 13px;
+  text-align: center;
   font-weight: 400;
 `;
 
@@ -95,6 +95,8 @@ class Player extends React.Component {
     this.seeNote = this.seeNote.bind(this);
     this.fixtureBeforeCurrentDate = this.fixtureBeforeCurrentDate.bind(this);
     this.renderStatsNotes = this.renderStatsNotes.bind(this);
+    this.averageAttaqueNotes = this.averageAttaqueNotes.bind(this);
+    this.averageDefenseNotes = this.averageDefenseNotes.bind(this);
   }
 
   componentDidMount(prevProps, prevState) {
@@ -547,7 +549,8 @@ class Player extends React.Component {
         player.interceptions = player.interceptions + this.state.interceptionsV;
         player.tackles = player.tackles + this.state.tacklesV;
         player.duel_aeerien = player.duel_aeerien + this.state.duel_aeerienV;
-        player.positionnement_defense + this.state.positionnement_defenseV;
+        player.positionnement_defense =
+          player.positionnement_defense + this.state.positionnement_defenseV;
         player.duel_terrestre =
           player.duel_terrestre + this.state.duel_terrestreV;
 
@@ -662,7 +665,7 @@ class Player extends React.Component {
               alt={fixture.teams.home.name}
               width="60"
               padding="2%"
-              marginRight="4%"
+              margin-right="2%"
             />
             {fixture.teams.home.name}
           </Col>
@@ -684,7 +687,7 @@ class Player extends React.Component {
               alt={fixture.teams.away.logo}
               width="60"
               padding="2%"
-              marginLeft="4%"
+              margin-left="2%"
             />
           </Col>
           <Col
@@ -729,114 +732,265 @@ class Player extends React.Component {
 
   renderStatsNotes() {
     return (
-      <RowNote>
-        <Card xs lg="2">
-          <ColNote>
-            <h3>Attaque</h3>
-            <RowContent>
-              <RowItem>
-                <DropDownTitle>Duel terrestre</DropDownTitle>
-              </RowItem>
-              <RowItem>
-                <input size="2" disabled></input>
-              </RowItem>
-            </RowContent>
-            <RowContent>
-              <RowItem>
-                <DropDownTitle>Duel terrestre</DropDownTitle>
-              </RowItem>
-              <RowItem>
-                <input size="2" disabled></input>
-              </RowItem>
-            </RowContent>
-            <RowContent>
-              <RowItem>
-                <DropDownTitle>Duel terrestre</DropDownTitle>
-              </RowItem>
-              <RowItem>
-                <input size="2" disabled></input>
-              </RowItem>
-            </RowContent>
-            <RowContent>
-              <RowItem>
-                <DropDownTitle>Duel terrestre</DropDownTitle>
-              </RowItem>
-              <RowItem>
-                <input size="2" disabled></input>
-              </RowItem>
-            </RowContent>
-            <RowContent>
-              <RowItem>
-                <DropDownTitle>Duel terrestre</DropDownTitle>
-              </RowItem>
-              <RowItem>
-                <input size="2" disabled></input>
-              </RowItem>
-            </RowContent>
-            <RowContent>
-              <RowItem>
-                <DropDownTitle>Duel terrestre</DropDownTitle>
-              </RowItem>
-              <RowItem>
-                <input size="2" disabled></input>
-              </RowItem>
-            </RowContent>
-          </ColNote>
-        </Card>
-        <Card xs lg="2">
-          <ColNote>
-            <h3>Attaque</h3>
-            <RowContent>
-              <RowItem>
-                <DropDownTitle>Duel terrestre</DropDownTitle>
-              </RowItem>
-              <RowItem>
-                <input size="2" disabled></input>
-              </RowItem>
-            </RowContent>
-            <RowContent>
-              <RowItem>
-                <DropDownTitle>Duel terrestre</DropDownTitle>
-              </RowItem>
-              <RowItem>
-                <input size="2" disabled></input>
-              </RowItem>
-            </RowContent>
-            <RowContent>
-              <RowItem>
-                <DropDownTitle>Duel terrestre</DropDownTitle>
-              </RowItem>
-              <RowItem>
-                <input size="2" disabled></input>
-              </RowItem>
-            </RowContent>
-            <RowContent>
-              <RowItem>
-                <DropDownTitle>Duel terrestre</DropDownTitle>
-              </RowItem>
-              <RowItem>
-                <input size="2" disabled></input>
-              </RowItem>
-            </RowContent>
-            <RowContent>
-              <RowItem>
-                <DropDownTitle>Duel terrestre</DropDownTitle>
-              </RowItem>
-              <RowItem>
-                <input size="2" disabled></input>
-              </RowItem>
-            </RowContent>
-            <RowContent>
-              <RowItem>
-                <DropDownTitle>Duel terrestre</DropDownTitle>
-              </RowItem>
-              <RowItem>
-                <input size="2" disabled></input>
-              </RowItem>
-            </RowContent>
-          </ColNote>
-        </Card>
-      </RowNote>
+      <RowStatsNote>
+        <Col xs lg="3">
+          <Card>
+            <Image
+              src={`https://media.api-sports.io/football/players/${this.props.player.player_id}.png`}
+              wrapped
+              ui={false}
+            />
+            <Card.Content>
+              <Card.Header>{this.props.player.player_name}</Card.Header>
+              <Card.Meta>
+                <span className="date">
+                  Nationality: {this.props.player.nationality}
+                </span>
+              </Card.Meta>
+              <Card.Description>
+                Full Name:{" "}
+                {this.props.player.firstname + " " + this.props.player.lastname}
+                <br />
+                Age: {this.props.player.age}
+                <br />
+                Position: {this.props.player.position}
+                <br />
+                Height: {this.props.player.height}
+              </Card.Description>
+            </Card.Content>
+          </Card>
+        </Col>
+        {this.props.selectedFixtureNotes.length > 0 ? (
+          <Col xs lg="4">
+            <Card xs lg="2">
+              <ColNote>
+                <h3 style={{ textAlign: "center" }}>Attaque</h3>
+                <h5 style={{ textAlign: "center" }}>
+                  Moyenne de {this.props.selectedFixtureNotes.length} matchs
+                </h5>
+                {this.averageAttaqueNotes()}
+              </ColNote>
+            </Card>
+          </Col>
+        ) : (
+          <Col xs lg="4">
+            <Card xs lg="2">
+              <ColNote>
+                <h3 style={{ textAlign: "center" }}>Attaque</h3>
+                <p style={{ textAlign: "center" }}>Pas de stats</p>
+              </ColNote>
+            </Card>
+          </Col>
+        )}
+        {this.props.selectedFixtureNotes.length > 0 ? (
+          <Col xs lg="4">
+            <Card xs lg="2">
+              <ColNote>
+                <h3 style={{ textAlign: "center" }}>Defense</h3>
+                <h5 style={{ textAlign: "center" }}>
+                  Moyenne de {this.props.selectedFixtureNotes.length} matchs
+                </h5>
+                {this.averageDefenseNotes()}
+              </ColNote>
+            </Card>
+          </Col>
+        ) : (
+          <Col xs lg="4">
+            <Card xs lg="2">
+              <ColNote>
+                <h3 style={{ textAlign: "center" }}>Defense</h3>
+                <p style={{ textAlign: "center" }}>Pas de stats</p>
+              </ColNote>
+            </Card>
+          </Col>
+        )}
+      </RowStatsNote>
+    );
+  }
+
+  averageAttaqueNotes() {
+    var fixtures = this.props.selectedFixtureNotes;
+    var playerId = this.props.player.player_id;
+    var playerFound = [];
+    var players = [];
+    var average;
+    var pass_courte = 0;
+    var pass_longue = 0;
+    var tir = 0;
+    var dribble = 0;
+    var positionnement = 0;
+    var controles = 0;
+
+    for (const [key, fixture] of Object.entries(fixtures)) {
+      for (const [key, player] of Object.entries(fixture)) {
+        if (key == "players") {
+          players.push(player);
+        }
+      }
+    }
+    average = players.length;
+
+    for (var i = 0; i < players.length; i++) {
+      for (var j = 0; j < players[i].length; j++) {
+        if (players[i][j].id == playerId) {
+          playerFound.push(players[i][j]);
+        }
+      }
+    }
+
+    for (var i = 0; i < playerFound.length; i++) {
+      pass_courte += playerFound[i].pass_courte;
+      pass_longue += playerFound[i].pass_longue;
+      tir += playerFound[i].tir;
+      dribble += playerFound[i].dribble;
+      positionnement += playerFound[i].positionnement;
+      controles += playerFound[i].controles;
+    }
+
+    return (
+      <div>
+        <RowContent>
+          <RowItem>
+            <DropDownTitle>Passe courte</DropDownTitle>
+          </RowItem>
+          <RowItem>
+            <p>{pass_courte / average}</p>
+          </RowItem>
+        </RowContent>
+        <RowContent>
+          <RowItem>
+            <DropDownTitle>Passe longue</DropDownTitle>
+          </RowItem>
+          <RowItem>
+            <p>{pass_longue / average}</p>
+          </RowItem>
+        </RowContent>
+        <RowContent>
+          <RowItem>
+            <DropDownTitle>Tir</DropDownTitle>
+          </RowItem>
+          <RowItem>
+            <p>{tir / average}</p>
+          </RowItem>
+        </RowContent>
+        <RowContent>
+          <RowItem>
+            <DropDownTitle>Dribble</DropDownTitle>
+          </RowItem>
+          <RowItem>
+            <p>{dribble / average}</p>
+          </RowItem>
+        </RowContent>
+        <RowContent>
+          <RowItem>
+            <DropDownTitle>Positionnement</DropDownTitle>
+          </RowItem>
+          <RowItem>
+            <p>{positionnement / average}</p>
+          </RowItem>
+        </RowContent>
+        <RowContent>
+          <RowItem>
+            <DropDownTitle>Controles</DropDownTitle>
+          </RowItem>
+          <RowItem>
+            <p>{controles / average}</p>
+          </RowItem>
+        </RowContent>
+      </div>
+    );
+  }
+
+  averageDefenseNotes() {
+    var fixtures = this.props.selectedFixtureNotes;
+    var playerId = this.props.player.player_id;
+    var playerFound = [];
+    var players = [];
+    var average;
+    var degagement = 0;
+    var interceptions = 0;
+    var tackles = 0;
+    var duel_aeerien = 0;
+    var duel_terrestre = 0;
+    var positionnement_defense = 0;
+
+    for (const [key, fixture] of Object.entries(fixtures)) {
+      for (const [key, player] of Object.entries(fixture)) {
+        if (key == "players") {
+          players.push(player);
+        }
+      }
+    }
+    average = players.length;
+
+    for (var i = 0; i < players.length; i++) {
+      for (var j = 0; j < players[i].length; j++) {
+        if (players[i][j].id == playerId) {
+          playerFound.push(players[i][j]);
+        }
+      }
+    }
+
+    for (var i = 0; i < playerFound.length; i++) {
+      degagement += playerFound[i].degagement;
+      interceptions += playerFound[i].interceptions;
+      tackles += playerFound[i].tackles;
+      duel_aeerien += playerFound[i].duel_aeerien;
+      duel_terrestre += playerFound[i].duel_terrestre;
+      positionnement_defense += playerFound[i].positionnement_defense;
+    }
+
+    return (
+      <div>
+        <RowContent>
+          <RowItem>
+            <DropDownTitle>Degagement</DropDownTitle>
+          </RowItem>
+          <RowItem>
+            <p>{degagement / average}</p>
+          </RowItem>
+        </RowContent>
+        <RowContent>
+          <RowItem>
+            <DropDownTitle>Interceptions</DropDownTitle>
+          </RowItem>
+          <RowItem>
+            <p>{interceptions / average}</p>
+          </RowItem>
+        </RowContent>
+        <RowContent>
+          <RowItem>
+            <DropDownTitle>Tackles</DropDownTitle>
+          </RowItem>
+          <RowItem>
+            <p>{tackles / average}</p>
+          </RowItem>
+        </RowContent>
+        <RowContent>
+          <RowItem>
+            <DropDownTitle>Duel Aeerien</DropDownTitle>
+          </RowItem>
+          <RowItem>
+            <p>{duel_aeerien / average}</p>
+          </RowItem>
+        </RowContent>
+        <RowContent>
+          <RowItem>
+            <DropDownTitle>Duel Terrestre</DropDownTitle>
+          </RowItem>
+          <RowItem>
+            <p>{duel_terrestre / average}</p>
+          </RowItem>
+        </RowContent>
+        <RowContent>
+          <RowItem>
+            <DropDownTitle>Positionnement Defense</DropDownTitle>
+          </RowItem>
+          <RowItem>
+            <p>{positionnement_defense / average}</p>
+          </RowItem>
+        </RowContent>
+      </div>
     );
   }
 
@@ -848,43 +1002,7 @@ class Player extends React.Component {
           <MainBody>
             {this.props.teamId != 0 ? (
               <CenterBody>
-                <Row>
-                  <Col xs lg="3">
-                    <Card>
-                      <Image
-                        src={`https://media.api-sports.io/football/players/${this.props.player.player_id}.png`}
-                        wrapped
-                        ui={false}
-                      />
-                      <Card.Content>
-                        <Card.Header>
-                          {this.props.player.player_name}
-                        </Card.Header>
-                        <Card.Meta>
-                          <span className="date">
-                            Nationality: {this.props.player.nationality}
-                          </span>
-                        </Card.Meta>
-                        <Card.Description>
-                          Full Name:{" "}
-                          {this.props.player.firstname +
-                            " " +
-                            this.props.player.lastname}
-                          <br />
-                          Age: {this.props.player.age}
-                          <br />
-                          Position: {this.props.player.position}
-                          <br />
-                          Height: {this.props.player.height}
-                        </Card.Description>
-                      </Card.Content>
-                    </Card>
-                  </Col>
-                  <Col xs lg="4">
-                    {" "}
-                    {this.renderStatsNotes()}
-                  </Col>
-                </Row>
+                <Row>{this.renderStatsNotes()}</Row>
               </CenterBody>
             ) : (
               <CenterBody>

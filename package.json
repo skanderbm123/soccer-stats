@@ -37,10 +37,12 @@
     "react-event-timeline": "^1.6.3",
     "react-helmet": "^6.1.0",
     "react-select": "^3.2.0",
+    "react-slick": "^0.28.1",
     "react-soccer-lineup": "^0.4.3",
     "react-tabs": "^3.2.3",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^2.1.2",
+    "slick-carousel": "^1.8.1",
     "styled-components": "^5.2.0",
     "sweetalert2": "^11.3.10",
     "sweetalert2-react-content": "^4.2.0"

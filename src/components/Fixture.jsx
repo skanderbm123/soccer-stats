@@ -28,6 +28,8 @@ import withReactContent from "sweetalert2-react-content";
 import Select from "react-select";
 import { updatePlayerNotesByFixtureId } from "../lib/DatabaseRequests";
 import Bars from "react-bars";
+import { Button, Row, Col } from "react-bootstrap";
+import Slider from "react-slick";
 
 const MySwal = withReactContent(Swal);
 
@@ -81,9 +83,11 @@ class Fixture extends React.Component {
     this.playerNote = this.playerNote.bind(this);
     this.findPlayer = this.findPlayer.bind(this);
     this.showPlayerBoxNote = this.showPlayerBoxNote.bind(this);
+    this.sliderPlayerBox = this.sliderPlayerBox.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.showSwal = this.showSwal.bind(this);
     this.setStats = this.setStats.bind(this);
+    this.getPlayerStats = this.getPlayerStats.bind(this);
   }
 
   componentDidMount() {
@@ -97,6 +101,7 @@ class Fixture extends React.Component {
         });
         this.forceUpdate();
       } else {
+        console.log("test3")
         this.setState({
           homeSquad: this.homeSquad,
           awaySquad: this.awaySquad,
@@ -503,10 +508,29 @@ class Fixture extends React.Component {
     );
   }
 
+  sliderPlayerBox(player) {
+    const settingsSlider = {
+      dots: true,
+      arrows: true,
+      infinite: true,
+      speed: 500,
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      className : "sliderClass"
+    };
+
+    return (
+      <Slider {...settingsSlider}>
+        {this.showPlayerBoxNote(player)}
+        {this.getPlayerStats(player.id)}
+      </Slider>
+    );
+  }
+
   showSwal(player, players, index) {
     return MySwal.fire({
       title: `${player.name}`,
-      html: this.showPlayerBoxNote(player),
+      html: this.sliderPlayerBox(player),
       confirmButtonText: "Save",
       focusConfirm: true,
       width: 1000,
@@ -526,7 +550,8 @@ class Fixture extends React.Component {
         player.interceptions = player.interceptions + this.state.interceptionsV;
         player.tackles = player.tackles + this.state.tacklesV;
         player.duel_aeerien = player.duel_aeerien + this.state.duel_aeerienV;
-        player.positionnement_defense + this.state.positionnement_defenseV;
+        player.positionnement_defense =
+          player.positionnement_defense + this.state.positionnement_defenseV;
         player.duel_terrestre =
           player.duel_terrestre + this.state.duel_terrestreV;
 
@@ -1123,6 +1148,100 @@ class Fixture extends React.Component {
       }
     }
     return data;
+  }
+
+  getPlayerStats(id) {
+    var stats;
+    var found = false;
+    this.props.fixture[0].players[0].players.forEach((player) => {
+      if (player.player.id == id) {
+        stats = player.statistics;
+        found = true;
+      }
+    });
+
+    if (!found) {
+      this.props.fixture[0].players[1].players.forEach((player) => {
+        if (player.player.id == id) {
+          stats = player.statistics;
+        }
+      });
+    }
+    stats = stats[0];
+    return (
+      <div>
+        <RowContent>
+          <RowItem>
+            <DropDownTitle>Note</DropDownTitle>
+          </RowItem>
+          <RowItem>
+            <p>{stats.games.rating != null ? stats.games.rating : "0"}</p>
+          </RowItem>
+        </RowContent>
+        <RowContent>
+          <RowItem>
+            <DropDownTitle>Minutes jouées</DropDownTitle>
+          </RowItem>
+          <RowItem>
+            <p>{stats.games.minutes != null ? stats.games.minutes : "0"}</p>
+          </RowItem>
+        </RowContent>
+        <RowContent>
+          <RowItem>
+            <DropDownTitle>Buts marques / assists</DropDownTitle>
+          </RowItem>
+          <RowItem>
+            <p>
+              {stats.goals.total != null ? stats.goals.total : "0"} /{" "}
+              {stats.goals.assists != null ? stats.goals.assists : "0"}
+            </p>
+          </RowItem>
+        </RowContent>
+        <RowContent>
+          <RowItem>
+            <DropDownTitle>Passes / Accuracy</DropDownTitle>
+          </RowItem>
+          <RowItem>
+            <p>
+              {stats.passes.total != null ? stats.passes.total : "0"} /{" "}
+              {stats.passes.accuracy != null ? stats.passes.accuracy : "0"}
+            </p>
+          </RowItem>
+        </RowContent>
+        <RowContent>
+          <RowItem>
+            <DropDownTitle>Tackles/Interceptions</DropDownTitle>
+          </RowItem>
+          <RowItem>
+            <p>
+              {stats.tackles.total != null ? stats.tackles.total : "0"} /{" "}
+              {stats.tackles.interceptions != null
+                ? stats.tackles.interceptions
+                : "0"}
+            </p>
+          </RowItem>
+        </RowContent>
+        <RowContent>
+          <RowItem>
+            <DropDownTitle>Hors jeu</DropDownTitle>
+          </RowItem>
+          <RowItem>
+            <p>{stats.offsides != null ? stats.offsides : "0"}</p>
+          </RowItem>
+        </RowContent>
+        <RowContent>
+          <RowItem>
+            <DropDownTitle>Cartons jaunes / rouges </DropDownTitle>
+          </RowItem>
+          <RowItem>
+            <p>
+              {stats.cards.yellow != null ? stats.cards.yellow : "0"} /{" "}
+              {stats.cards.red != null ? stats.cards.red : "0"}
+            </p>
+          </RowItem>
+        </RowContent>
+      </div>
+    );
   }
 
   render() {

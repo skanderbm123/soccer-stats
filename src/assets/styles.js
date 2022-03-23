@@ -65,17 +65,33 @@ export const RowNote = styled.div`
   width: 100%;
 `;
 
+
+export const RowStatsNote = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 export const RowContent = styled.div`
   display: grid;
   grid-template-columns: auto auto auto;
 `;
 
 export const RowItem = styled.div`
-  padding: 10px;
+  padding: 3px;
 `;
 
 export const DropDownTitle = styled.span`
   float: left;
+  padding: 1%;
+`;
+
+export const StatsTitle = styled.span`
+  text-align: center;
   padding: 1%;
 `;
 
@@ -232,13 +248,11 @@ export const CountryFlag = styled.img`
 `;
 
 export const PlayerRow = styled.div`
-  background-color: #ffd6d6;
   border-top: 1px solid #f1f3f4;
+  border-bottom: 1px solid #f1f3f4;
   cursor: pointer;
   display: grid;
   font-weight: 400;
-  grid-template-areas: "name position nationality age height weight";
-  grid-template-columns: 3fr 2fr 2fr 1fr 1fr 1fr;
   padding: 5px;
 
   &:hover {
