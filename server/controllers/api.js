@@ -335,7 +335,7 @@ const getPlayerNotes = (req, res) => {
   const fixture_id = req.params.fixture_id;
   const players = footy.getPlayerNotes(fixture_id);
   Promise.resolve(players)
-    .then((results) => res.status(200).send(results.players))
+    .then((results) => res.status(200).send(results))
     .catch((err) => {
       console.log(err);
     });

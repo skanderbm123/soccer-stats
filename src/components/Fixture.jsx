@@ -90,15 +90,18 @@ class Fixture extends React.Component {
     this.getPlayerStats = this.getPlayerStats.bind(this);
   }
 
-  componentDidMount() {
-    if (this.props.fixture > 0) {
+  componentDidMount(prevProps, prevState) {
+
+    if (this.props.fixture.length > 0) {
       if (this.props.fixture[0].lineups.length > 0) {
+        console.log("TEST 0.5")
         this.homeSquad = this.buildHomeTeam(this.props.fixture[0].lineups[0]);
         this.awaySquad = this.buildAwayTeam(this.props.fixture[0].lineups[1]);
         this.setState({
           homeSquad: this.homeSquad,
           awaySquad: this.awaySquad,
         });
+        console.log("TEST 0.9")
         this.forceUpdate();
       } else {
         console.log("test3")
@@ -109,9 +112,11 @@ class Fixture extends React.Component {
         this.forceUpdate();
       }
     }
+    console.log("TEST ")
   }
 
   componentDidUpdate(prevProps, prevState) {
+ 
     if (this.props.fixture.length > 0) {
       if (prevProps.fixture[0] !== this.props.fixture[0]) {
         if (this.props.fixture[0].lineups.length > 0) {
@@ -587,7 +592,7 @@ class Fixture extends React.Component {
   }
 
   playerNote(id) {
-    var players = this.props.fixtureNotes;
+    var players = this.props.fixtureNotes.players;
     var index = -1;
     var player;
 
